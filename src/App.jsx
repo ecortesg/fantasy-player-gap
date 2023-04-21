@@ -9,7 +9,12 @@ function App() {
     queryFn: () => getProjections(season),
   });
 
-  if (projectionsQuery.status === "loading") return <h1>Loading...</h1>;
+  if (projectionsQuery.status === "loading")
+    return (
+      <h1 className="flex h-screen justify-center items-center text-3xl font-bold text-center">
+        Loading...
+      </h1>
+    );
   if (projectionsQuery.status === "error") {
     return <p>{JSON.stringify(projectionsQuery.error)}</p>;
   }
