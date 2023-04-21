@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { arrayRange, roundNumber } from "../utils";
 import DraftHeader from "./DraftHeader";
 import DraftBoard from "./DraftBoard";
 import DraftPanel from "./DraftPanel";
 import SettingsForm from "./SettingsForm";
 import SettingsModal from "./SettingsModal";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 function Dashboard({ data }) {
   const defaultSettings = {
@@ -16,11 +17,14 @@ function Dashboard({ data }) {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [roster, setRoster] = useState(1);
-  const [settings, setSettings] = useState(defaultSettings);
-  const { scoring, adp, teams, rounds } = settings;
+  const [settings, setSettings] = useLocalStorage("settings", defaultSettings);
+  const [draftState, setDraftState] = useLocalStorage(
+    "draftState",
+    draftObject(settings, data)
+  );
 
-  const [draftState, setDraftState] = useState(draftObject(settings, data));
   const { counter, picks, freeAgents } = draftState;
+  const { scoring, adp, teams, rounds } = settings;
 
   function handleSubmit(e) {
     e.preventDefault();

@@ -39,7 +39,7 @@ function SettingsForm({ settings, handleSubmit, onClose }) {
       <div className="flex w-full justify-end">
         <IoMdClose className="text-3xl cursor-pointer" onClick={onClose} />
       </div>
-      <h2 className="text-2xl font-bold">Draft Settings</h2>
+      <h2 className="text-2xl font-bold">New Draft</h2>
       <hr className="my-2" />
       <form className="" onSubmit={handleSubmit}>
         {SETTINGS.map((field) => {
@@ -69,7 +69,7 @@ function SettingsForm({ settings, handleSubmit, onClose }) {
           <input
             className="bg-teal-500 py-2 px-4 rounded cursor-pointer text-white hover:bg-teal-400"
             type="submit"
-            value="Save"
+            value="Done"
           ></input>
         </div>
       </form>
