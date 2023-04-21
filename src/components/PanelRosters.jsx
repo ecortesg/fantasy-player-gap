@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   createColumnHelper,
   flexRender,
@@ -12,7 +12,7 @@ function PanelRosters({ data, teams, setRoster }) {
   const [sorting, setSorting] = useState([]);
 
   const columnHelper = createColumnHelper();
-  const columns = [
+  const columns = useMemo( () => [
     columnHelper.accessor(
       (row) => `${row.player.first_name} ${row.player.last_name}`,
       {
@@ -25,7 +25,7 @@ function PanelRosters({ data, teams, setRoster }) {
     columnHelper.accessor((row) => `${row.round}.${row.number}`, {
       header: "Pick",
     }),
-  ];
+  ], []);
 
   const table = useReactTable({
     data,

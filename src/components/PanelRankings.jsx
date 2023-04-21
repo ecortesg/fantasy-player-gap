@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-table";
 import RankingsPlayerFilter from "./RankingsPlayerFilter";
 import RankingsPositionFilter from "./RankingsPositionFilter";
-import { IoMdAddCircle, IoIosUndo } from "react-icons/io";
+import { IoMdAddCircle } from "react-icons/io";
 
 function PanelRankings({
   data,
@@ -28,7 +28,9 @@ function PanelRankings({
       header: "",
       cell: (props) => (
         <button
-          className={`text-2xl  flex ${isLastPick ? "text-teal-200": "cursor-pointer text-teal-500"}`}
+          className={`text-2xl  flex ${
+            isLastPick ? "text-teal-200" : "cursor-pointer text-teal-500"
+          }`}
           onClick={() => selectPlayer(props.row.original.id)}
           disabled={isLastPick}
         >

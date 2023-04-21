@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   createColumnHelper,
   flexRender,
@@ -11,7 +11,7 @@ function PanelReplacements({ data, nextPick }) {
   const [sorting, setSorting] = useState([]);
 
   const columnHelper = createColumnHelper();
-  const columns = [
+  const columns = useMemo(() => [
     columnHelper.accessor((row) => `${row.first_name} ${row.last_name}`, {
       id: "player_name",
       header: "Player",
@@ -25,7 +25,7 @@ function PanelReplacements({ data, nextPick }) {
     columnHelper.accessor("fpts", {
       header: "FPts",
     }),
-  ];
+  ], []);
 
   const table = useReactTable({
     data,

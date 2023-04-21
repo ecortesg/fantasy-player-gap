@@ -6,57 +6,6 @@ import DraftPanel from "./DraftPanel";
 import SettingsForm from "./SettingsForm";
 import SettingsModal from "./SettingsModal";
 
-function draftPicks(teams, rounds) {
-  const picks = [];
-  let ov = 1;
-  for (let i = 1; i <= rounds + 2; i++) {
-    let order;
-    if (i % 2 === 1) {
-      order = arrayRange(1, teams, 1);
-    } else {
-      order = arrayRange(1, teams, 1).reverse();
-    }
-    for (let j of order) {
-      let pick = {};
-      pick.overall = ov;
-      pick.round = i;
-      pick.number = order[j - 1];
-      pick.team = j;
-      pick.player = {};
-      picks.push(pick);
-      ov++;
-    }
-  }
-  return picks;
-}
-
-export function createDraft(settings, data) {
-  const { scoring, adp, teams, rounds } = settings;
-  const counter = 0;
-  const picks = draftPicks(teams, rounds);
-  const freeAgents = data
-    .map((elem) => {
-      return {
-        id: elem.id,
-        first_name: elem.first_name,
-        last_name: elem.last_name,
-        position: elem.position,
-        adp: elem.stats[`adp_${adp}`] || 999,
-        fpts: roundNumber(elem.stats[`pts_${scoring}`] || 0, 1),
-      };
-    })
-    .filter((elem) => elem.adp < 999 || elem.fpts > 0)
-    .sort((a, b) => {
-      return a.adp - b.adp || b.fpts - a.fpts;
-    });
-
-  return {
-    counter,
-    picks,
-    freeAgents,
-  };
-}
-
 function Dashboard({ data }) {
   const defaultSettings = {
     scoring: "half_ppr",
@@ -70,7 +19,7 @@ function Dashboard({ data }) {
   const [settings, setSettings] = useState(defaultSettings);
   const { scoring, adp, teams, rounds } = settings;
 
-  const [draftState, setDraftState] = useState(createDraft(settings, data));
+  const [draftState, setDraftState] = useState(draftObject(settings, data));
   const { counter, picks, freeAgents } = draftState;
 
   function handleSubmit(e) {
@@ -82,7 +31,7 @@ function Dashboard({ data }) {
       rounds: parseInt(e.target.rounds.value),
     };
     setSettings(newSettings);
-    setDraftState(createDraft(newSettings, data));
+    setDraftState(draftObject(newSettings, data));
     setRoster(1);
     setIsModalOpen(false);
   }
@@ -96,7 +45,7 @@ function Dashboard({ data }) {
 
   const currentPick = picks[counter];
   const nextPick = picks
-    .slice(counter + 2) // 2 because we want to ignore the pick following the turn
+    .slice(counter + 2) // 2 because we want to ignore the pick at the turn
     .find((elem) => currentPick.team === elem.team);
   const picksInBetween = nextPick.overall - currentPick.overall;
 
@@ -215,3 +164,54 @@ function Dashboard({ data }) {
 }
 
 export default Dashboard;
+
+function draftPicks(teams, rounds) {
+  const picks = [];
+  let ov = 1;
+  for (let i = 1; i <= rounds + 2; i++) {
+    let order;
+    if (i % 2 === 1) {
+      order = arrayRange(1, teams, 1);
+    } else {
+      order = arrayRange(1, teams, 1).reverse();
+    }
+    for (let j of order) {
+      let pick = {};
+      pick.overall = ov;
+      pick.round = i;
+      pick.number = order[j - 1];
+      pick.team = j;
+      pick.player = {};
+      picks.push(pick);
+      ov++;
+    }
+  }
+  return picks;
+}
+
+function draftObject(settings, data) {
+  const { scoring, adp, teams, rounds } = settings;
+  const counter = 0;
+  const picks = draftPicks(teams, rounds);
+  const freeAgents = data
+    .map((elem) => {
+      return {
+        id: elem.id,
+        first_name: elem.first_name,
+        last_name: elem.last_name,
+        position: elem.position,
+        adp: elem.stats[`adp_${adp}`] || 999,
+        fpts: roundNumber(elem.stats[`pts_${scoring}`] || 0, 1),
+      };
+    })
+    .filter((elem) => elem.adp < 999 || elem.fpts > 0)
+    .sort((a, b) => {
+      return a.adp - b.adp || b.fpts - a.fpts;
+    });
+
+  return {
+    counter,
+    picks,
+    freeAgents,
+  };
+}
