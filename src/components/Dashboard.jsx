@@ -140,7 +140,7 @@ function Dashboard({ data }) {
           onClose={() => setIsModalOpen(false)}
         />
       </SettingsModal>
-      <div className="grid min-h-screen grid-rows-[80px_auto_50vh]">
+      <main className="grid min-h-screen grid-rows-[80px_auto_50vh]">
         <DraftHeader settings={settings} onOpen={() => setIsModalOpen(true)} />
         <DraftBoard
           data={picks}
@@ -162,7 +162,7 @@ function Dashboard({ data }) {
           setRoster={setRoster}
           currentRoster={currentRoster}
         />
-      </div>
+      </main>
     </>
   );
 }

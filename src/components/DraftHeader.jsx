@@ -3,7 +3,7 @@ import { IoMdSettings } from "react-icons/io";
 
 function DraftHeader({ settings, onOpen }) {
   return (
-    <div className="flex justify-between items-center px-5 pt-5 bg-white">
+    <section className="flex justify-between items-center px-5 pt-5 bg-white">
       <h1 className="font-bold sm:text-base text-xs">
         FANTASY<span className="block sm:text-2xl text-base">PLAYERGAP</span>
       </h1>
@@ -22,7 +22,7 @@ function DraftHeader({ settings, onOpen }) {
           onClick={onOpen}
         />
       </div>
-    </div>
+    </section>
   );
 }
 

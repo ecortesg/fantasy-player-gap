@@ -15,7 +15,7 @@ function DraftPanel({
   currentRoster,
 }) {
   return (
-    <div className="w-full lg:flex z-10 bg-white h-[50vh] fixed bottom-0 overflow-y-auto">
+    <section className="w-full lg:flex z-10 bg-white h-[50vh] fixed bottom-0 overflow-y-auto">
       <div className="lg:w-1/2 w-full md:h-full h-5/6 overflow-hidden p-5">
         <PanelRankings
           data={freeAgentsRanked}
@@ -35,7 +35,7 @@ function DraftPanel({
           setRoster={setRoster}
         />
       </div>
-    </div>
+    </section>
   );
 }
 

@@ -22,7 +22,7 @@ function DraftBoard({ data, teams, rounds, scoring, adp, onOpen }) {
   }, []);
 
   return (
-    <div className="overflow-x-auto flex">
+    <section className="overflow-x-auto flex">
       <div className="min-w-screen m-auto relative">
         <div
           id="board-header-clone"
@@ -72,7 +72,7 @@ function DraftBoard({ data, teams, rounds, scoring, adp, onOpen }) {
           })}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
