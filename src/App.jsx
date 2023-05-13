@@ -3,7 +3,7 @@ import { getProjections } from "./api/projections";
 import Dashboard from "./components/Dashboard";
 
 function App() {
-  const season = "2022";
+  const season = "2023";
   const projectionsQuery = useQuery({
     queryKey: ["projections", season],
     queryFn: () => getProjections(season),
