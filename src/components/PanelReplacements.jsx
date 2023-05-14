@@ -13,7 +13,7 @@ function PanelReplacements({ data, nextPick }) {
   const columnHelper = createColumnHelper();
   const columns = useMemo(() => [
     columnHelper.accessor((row) => `${row.first_name} ${row.last_name}`, {
-      id: "player_name",
+      id: "player",
       header: "Player",
     }),
     columnHelper.accessor("position", {

@@ -105,31 +105,35 @@ function Dashboard({ data }) {
     });
   }
 
-  const freeAgentsRanked = freeAgents.map((elem) => {
-    const replacement = replacements.find(
-      (repl) => repl.position === elem.position
-    );
+  const freeAgentsRanked = freeAgents
+    .map((elem) => {
+      const replacement = replacements.find(
+        (repl) => repl.position === elem.position
+      );
 
-    const freeAgent = { ...elem };
-    freeAgent.gap = roundNumber(freeAgent.fpts - replacement.fpts, 1);
+      const freeAgent = { ...elem };
+      freeAgent.gap = roundNumber(freeAgent.fpts - replacement.fpts, 1);
 
-    if (freeAgent.adp <= nextPick.overall) {
-      freeAgent.urgency = { value: 1, text: "High" };
-    } else if (
-      freeAgent.adp <=
-      nextPick.overall + picks[nextPick.overall - 1].overall
-    ) {
-      freeAgent.urgency = { value: 2, text: "Medium" };
-    } else {
-      freeAgent.urgency = { value: 3, text: "Low" };
-    }
+      if (freeAgent.adp <= nextPick.overall) {
+        freeAgent.urgency = { value: 1, text: "High" };
+      } else if (
+        freeAgent.adp <=
+        nextPick.overall + picks[nextPick.overall - 1].overall
+      ) {
+        freeAgent.urgency = { value: 2, text: "Medium" };
+      } else {
+        freeAgent.urgency = { value: 3, text: "Low" };
+      }
 
-    return freeAgent;
-  });
+      return freeAgent;
+    })
+    .sort((a, b) => {
+      return a.urgency.value - b.urgency.value || b.gap - a.gap;
+    });
 
-  freeAgentsRanked.sort((a, b) => {
-    return a.urgency.value - b.urgency.value || b.gap - a.gap;
-  });
+  freeAgentsRanked.forEach((elem, index) => (elem.rank = index + 1));
+
+  console.log(freeAgentsRanked);
 
   return (
     <>

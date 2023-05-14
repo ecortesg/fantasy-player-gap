@@ -38,8 +38,11 @@ function PanelRankings({
         </button>
       ),
     }),
+    columnHelper.accessor("rank", {
+      header: "Rank",
+    }),
     columnHelper.accessor((row) => `${row.first_name} ${row.last_name}`, {
-      id: "player_name",
+      id: "player",
       header: "Player",
     }),
     columnHelper.accessor("position", {
@@ -71,7 +74,7 @@ function PanelRankings({
     getFilteredRowModel: getFilteredRowModel(),
   });
 
-  const playerColumn = table.getColumn("player_name");
+  const playerColumn = table.getColumn("player");
   const positionColumn = table.getColumn("position");
 
   return (
