@@ -97,7 +97,6 @@ function PanelRankings({
         </button>
         <div className="col-span-2">
           <RankingsPositionFilter
-            column={positionColumn}
             onChange={(value) => positionColumn.setFilterValue(value)}
           />
         </div>
