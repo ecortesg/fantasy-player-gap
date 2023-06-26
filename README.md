@@ -1,6 +1,6 @@
 # Fantasy Player Gap
 
-<a href="https://fantasy-player-gap.vercel.app/"> Live Site </a>
+[Live Site](https://fantasy-player-gap.vercel.app/)
 
 Fantasy Football drafting tool that dynamically ranks players based on the current draft state.<br/>
 Follow along with your league's picks and find out who are the most valuable players.
@@ -9,8 +9,19 @@ Follow along with your league's picks and find out who are the most valuable pla
 
 ## Tech Stack
 
+### Frontend
+
 - React
+- TanStack Query
+- TanStack Table
+- Tailwind CSS
+
+### Backend → [Repo](https://github.com/ecortesg/fantasy-api)
+
 - Node.js
 - Express
+- Mongoose
+
+### Database
+
 - MongoDB
-- Tailwind CSS

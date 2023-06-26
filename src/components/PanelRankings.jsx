@@ -85,7 +85,7 @@ function PanelRankings({
           onChange={(value) => playerColumn.setFilterValue(value)}
         />
         <button
-          className={`rounded-lg px-3 py-1 text-white shadow m-auto sm:text-base text-xs ${
+          className={`rounded px-3 py-1 text-white shadow m-auto sm:text-base text-xs ${
             isFirstPick
               ? "bg-red-300"
               : "cursor-pointer bg-red-500 hover:bg-red-400"

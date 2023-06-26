@@ -18,7 +18,7 @@ function RankingsPlayerFilter({ column, onChange, debounce = 500 }) {
 
   return (
     <input
-      className="border md:w-1/3 rounded-lg px-2 my-auto shadow"
+      className="border md:w-1/3 rounded px-2 my-auto shadow"
       type="text"
       placeholder="Find player"
       value={value}
