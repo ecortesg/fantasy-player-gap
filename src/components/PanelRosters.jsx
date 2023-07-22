@@ -12,20 +12,23 @@ function PanelRosters({ data, teams, setRoster }) {
   const [sorting, setSorting] = useState([]);
 
   const columnHelper = createColumnHelper();
-  const columns = useMemo( () => [
-    columnHelper.accessor(
-      (row) => `${row.player.first_name} ${row.player.last_name}`,
-      {
-        header: "Player",
-      }
-    ),
-    columnHelper.accessor((row) => row.player.position, {
-      header: "Position",
-    }),
-    columnHelper.accessor((row) => `${row.round}.${row.number}`, {
-      header: "Pick",
-    }),
-  ], []);
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor(
+        (row) => `${row.player.first_name} ${row.player.last_name}`,
+        {
+          header: "Player",
+        }
+      ),
+      columnHelper.accessor((row) => row.player.position, {
+        header: "Position",
+      }),
+      columnHelper.accessor((row) => `${row.round}.${row.number}`, {
+        header: "Pick",
+      }),
+    ],
+    []
+  );
 
   const table = useReactTable({
     data,

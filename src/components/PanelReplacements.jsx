@@ -7,25 +7,28 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-function PanelReplacements({ data, nextPick }) {
+function PanelReplacements({ data, currentPick, nextPick, picksInBetween }) {
   const [sorting, setSorting] = useState([]);
 
   const columnHelper = createColumnHelper();
-  const columns = useMemo(() => [
-    columnHelper.accessor((row) => `${row.first_name} ${row.last_name}`, {
-      id: "player",
-      header: "Player",
-    }),
-    columnHelper.accessor("position", {
-      header: "Position",
-    }),
-    columnHelper.accessor("adp", {
-      header: "ADP",
-    }),
-    columnHelper.accessor("fpts", {
-      header: "FPts",
-    }),
-  ], []);
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor((row) => `${row.first_name} ${row.last_name}`, {
+        id: "player",
+        header: "Player",
+      }),
+      columnHelper.accessor("position", {
+        header: "Position",
+      }),
+      columnHelper.accessor("adp", {
+        header: "ADP",
+      }),
+      columnHelper.accessor("fpts", {
+        header: "FPts",
+      }),
+    ],
+    []
+  );
 
   const table = useReactTable({
     data,
@@ -37,14 +40,9 @@ function PanelReplacements({ data, nextPick }) {
   });
 
   return (
-    <>
-      <div className="h-1/6">
-        <h2 className="text-xl font-semibold">REPLACEMENTS</h2>
-        <h4>
-          Next Pick: {nextPick.round}.{nextPick.number}
-        </h4>
-      </div>
-      <div className="h-5/6 overflow-x-auto">
+    <div className="flex flex-col h-full xl:gap-0 gap-4">
+      <h2 className="h-1/6 text-xl font-semibold">REPLACEMENTS</h2>
+      <div className="overflow-x-auto">
         <table className="w-full table-auto">
           <thead className="border-b sticky top-0 bg-gray-100">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -88,7 +86,25 @@ function PanelReplacements({ data, nextPick }) {
           </tbody>
         </table>
       </div>
-    </>
+      <div className="flex-1 flex justify-around items-center">
+        <div className="text-center">
+          <p className="font-semibold text-xl">
+            {currentPick.round}.{currentPick.number} ({currentPick.overall})
+          </p>
+          <p className="text-sm">Current Pick</p>
+        </div>
+        <div className="text-center">
+          <p className="font-semibold text-xl">
+            {nextPick.round}.{nextPick.number} ({nextPick.overall})
+          </p>
+          <p className="text-sm">Next Pick</p>
+        </div>
+        <div className="text-center">
+          <p className="font-semibold text-xl">{picksInBetween}</p>
+          <p className="text-sm">In Between</p>
+        </div>
+      </div>
+    </div>
   );
 }
 

@@ -160,7 +160,9 @@ function Dashboard({ data }) {
           isFirstPick={isFirstPick}
           isLastPick={isLastPick}
           undoPrevPick={undoPrevPick}
+          currentPick={currentPick}
           nextPick={nextPick}
+          picksInBetween={picksInBetween}
           replacements={replacements}
           teams={teams}
           setRoster={setRoster}
