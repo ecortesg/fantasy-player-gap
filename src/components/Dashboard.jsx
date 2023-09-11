@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { arrayRange, roundNumber } from "../utils";
 import DraftHeader from "./DraftHeader";
 import DraftBoard from "./DraftBoard";
@@ -6,39 +6,19 @@ import DraftPanel from "./DraftPanel";
 import SettingsForm from "./SettingsForm";
 import SettingsModal from "./SettingsModal";
 import useLocalStorage from "../hooks/useLocalStorage";
+import { useDraftSettingsStore } from "../store/draftSettingsStore";
 
 function Dashboard({ data }) {
-  const defaultSettings = {
-    scoring: "half_ppr",
-    adp: "half_ppr",
-    teams: 12,
-    rounds: 15,
-  };
+  const draftSettings = useDraftSettingsStore((state) => state.draftSettings);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [roster, setRoster] = useState(1);
-  const [settings, setSettings] = useLocalStorage("settings", defaultSettings);
   const [draftState, setDraftState] = useLocalStorage(
     "draftState",
-    draftObject(settings, data)
+    draftObject(draftSettings, data)
   );
 
   const { counter, picks, freeAgents } = draftState;
-  const { scoring, adp, teams, rounds } = settings;
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    const newSettings = {
-      scoring: e.target.scoring.value,
-      adp: e.target.adp.value,
-      teams: parseInt(e.target.teams.value),
-      rounds: parseInt(e.target.rounds.value),
-    };
-    setSettings(newSettings);
-    setDraftState(draftObject(newSettings, data));
-    setRoster(1);
-    setIsModalOpen(false);
-  }
+  const { teams, rounds } = draftSettings;
 
   const isFirstPick = counter === 0;
   const isLastPick = counter === teams * rounds;
@@ -133,27 +113,14 @@ function Dashboard({ data }) {
 
   freeAgentsRanked.forEach((elem, index) => (elem.rank = index + 1));
 
-  console.log(freeAgentsRanked);
-
   return (
     <>
-      <SettingsModal open={isModalOpen}>
-        <SettingsForm
-          settings={settings}
-          handleSubmit={handleSubmit}
-          onClose={() => setIsModalOpen(false)}
-        />
+      <SettingsModal>
+        <SettingsForm />
       </SettingsModal>
       <main className="grid min-h-screen grid-rows-[80px_auto_50vh]">
-        <DraftHeader settings={settings} onOpen={() => setIsModalOpen(true)} />
-        <DraftBoard
-          data={picks}
-          teams={teams}
-          rounds={rounds}
-          scoring={scoring}
-          adp={adp}
-          onOpen={() => setIsModalOpen(true)}
-        />
+        <DraftHeader />
+        <DraftBoard data={picks} teams={teams} rounds={rounds} />
         <DraftPanel
           freeAgentsRanked={freeAgentsRanked}
           selectPlayer={selectPlayer}
@@ -199,8 +166,8 @@ function draftPicks(teams, rounds) {
   return picks;
 }
 
-function draftObject(settings, data) {
-  const { scoring, adp, teams, rounds } = settings;
+function draftObject(draftSettings, data) {
+  const { scoring, adp, teams, rounds } = draftSettings;
   const counter = 0;
   const picks = draftPicks(teams, rounds);
   const freeAgents = data
@@ -211,7 +178,9 @@ function draftObject(settings, data) {
         last_name: elem.last_name,
         position: elem.position,
         adp: elem.stats[`adp_${adp}`] || 999,
-        fpts: roundNumber(elem.stats[`pts_${scoring}`] || 0, 1),
+        fpts: Object.keys(scoring).reduce((total, key) => {
+          return total + scoring[key] * (elem.stats[key] || 0);
+        }, 0),
       };
     })
     .filter((elem) => elem.adp < 999 || elem.fpts > 0)

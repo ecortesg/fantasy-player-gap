@@ -2,7 +2,7 @@ import { arrayRange } from "../utils";
 import BoardCard from "./BoardCard";
 import { useEffect } from "react";
 
-function DraftBoard({ data, teams, rounds, scoring, adp, onOpen }) {
+function DraftBoard({ data, teams, rounds }) {
   const teamsArray = arrayRange(0, teams - 1, 1);
   const roundsArray = arrayRange(0, rounds - 1, 1);
 
