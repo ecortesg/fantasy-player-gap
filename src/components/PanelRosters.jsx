@@ -80,7 +80,7 @@ function PanelRosters({ data, teams, setRoster }) {
           </thead>
           <tbody className="overflow-y-auto">
             {table.getRowModel().rows.map((row) => (
-              <tr className="border-b hover:bg-slate-100" key={row.id}>
+              <tr className="border-b hover:bg-slate-200" key={row.id}>
                 {row.getVisibleCells().map((cell) => (
                   <td className="whitespace-nowrap px-2" key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
