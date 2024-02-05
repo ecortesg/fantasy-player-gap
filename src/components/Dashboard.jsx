@@ -13,7 +13,7 @@ function Dashboard({ data }) {
 
   const [roster, setRoster] = useState(1);
   const [draftState, setDraftState] = useLocalStorage(
-    "draftState",
+    "FPG_DRAFT",
     draftObject(draftSettings, data)
   );
 
@@ -178,9 +178,12 @@ function draftObject(draftSettings, data) {
         last_name: elem.last_name,
         position: elem.position,
         adp: elem.stats[`adp_${adp}`] || 999,
-        fpts: Object.keys(scoring).reduce((total, key) => {
-          return total + scoring[key] * (elem.stats[key] || 0);
-        }, 0),
+        fpts: roundNumber(
+          Object.keys(scoring).reduce((total, key) => {
+            return total + scoring[key] * (elem.stats[key] || 0);
+          }, 0),
+          1
+        ),
       };
     })
     .filter((elem) => elem.adp < 999 || elem.fpts > 0)

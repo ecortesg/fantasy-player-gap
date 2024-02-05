@@ -20,9 +20,7 @@ function DraftHeader() {
           <p className="sm:text-2xl font-semibold">
             {draftSettings.teams} Teams · {draftSettings.rounds} Rounds
           </p>
-          <p className="sm:text-base text-xs">
-            ADP {ADP_TEXT[draftSettings.adp]}
-          </p>
+          <p className="sm:text-base text-xs">ADP {draftSettings.adp}</p>
         </div>
         <IoMdSettings
           className="sm:text-5xl text-[40px] sm:text-[56px] cursor-pointer text-gray-400 hover:text-black"

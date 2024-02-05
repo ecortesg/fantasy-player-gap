@@ -1,18 +1,18 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { DEFAULT_SETTINGS } from "../data/settings_data";
+import { useDraftSettingsStore } from "./draftSettingsStore";
 
-export const useDraftSettingsStore = create(
+export const useDraftStore = create(
   persist(
     (set) => ({
-      draftSettings: DEFAULT_SETTINGS,
+      draftState: useDraftSettingsStore.getState(),
       updateDraftSettings: (newSettings) =>
         set(() => ({
           draftSettings: newSettings,
         })),
     }),
     {
-      name: "FPG_SETTINGS",
+      name: "FPG_DRAFT",
       storage: createJSONStorage(() => localStorage),
     }
   )
