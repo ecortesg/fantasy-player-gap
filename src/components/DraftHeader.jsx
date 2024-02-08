@@ -8,7 +8,9 @@ function DraftHeader() {
     (state) => state.updateIsModalOpen
   );
 
-  const draftSettings = useDraftSettingsStore((state) => state.draftSettings);
+  const { teams, rounds, adp } = useDraftSettingsStore(
+    (state) => state.draftSettings
+  );
 
   return (
     <section className="flex justify-between items-center px-5 pt-5 bg-white">
@@ -18,9 +20,9 @@ function DraftHeader() {
       <div className="flex sm:gap-6 gap-2 text-end">
         <div>
           <p className="sm:text-2xl font-semibold">
-            {draftSettings.teams} Teams · {draftSettings.rounds} Rounds
+            {teams} Teams · {rounds} Rounds
           </p>
-          <p className="sm:text-base text-xs">ADP {draftSettings.adp}</p>
+          <p className="sm:text-base text-xs">ADP {ADP_TEXT[adp]}</p>
         </div>
         <IoMdSettings
           className="sm:text-5xl text-[40px] sm:text-[56px] cursor-pointer text-gray-400 hover:text-black"

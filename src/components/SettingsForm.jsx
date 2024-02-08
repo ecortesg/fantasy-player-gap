@@ -10,6 +10,7 @@ import {
 import { IoMdClose } from "react-icons/io";
 import { useDraftSettingsStore } from "../store/draftSettingsStore";
 import { useDashboardSettingsStore } from "../store/dashboardSettingsStore";
+import { useDraftStore } from "../store/draftStore";
 
 function SettingsForm({ handleSubmit }) {
   const updateIsModalOpen = useDashboardSettingsStore(
@@ -19,6 +20,8 @@ function SettingsForm({ handleSubmit }) {
   const [draftSettings, updateDraftSettings] = useDraftSettingsStore(
     (state) => [state.draftSettings, state.updateDraftSettings]
   );
+
+  const newDraft = useDraftStore((state) => state.newDraft);
 
   const [values, setValues] = useState(draftSettings);
 
@@ -36,8 +39,8 @@ function SettingsForm({ handleSubmit }) {
   function handleSubmit(e) {
     e.preventDefault();
     updateDraftSettings(values);
-    // updateDraftState
     updateIsModalOpen(false);
+    newDraft();
   }
 
   return (
@@ -69,7 +72,7 @@ function SettingsForm({ handleSubmit }) {
                 >
                   {field.options.map((option) => {
                     return (
-                      <option key={option.id} value={draftSettings[option.id]}>
+                      <option key={option.id} value={option.id}>
                         {option.text}
                       </option>
                     );

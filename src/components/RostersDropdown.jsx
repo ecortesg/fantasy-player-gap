@@ -1,11 +1,17 @@
+import { useDashboardSettingsStore } from "../store/dashboardSettingsStore";
+import { useDraftSettingsStore } from "../store/draftSettingsStore";
 import { arrayRange } from "../utils";
 
-function RostersDropdown({ teams, setRoster }) {
+function RostersDropdown() {
+  const { teams } = useDraftSettingsStore((state) => state.draftSettings);
+  const updateRoster = useDashboardSettingsStore((state) => state.updateRoster);
+
   const teamsArray = arrayRange(1, teams, 1);
+
   return (
     <select
       className="border rounded shadow"
-      onChange={(e) => setRoster(parseInt(e.target.value))}
+      onChange={(e) => updateRoster(parseInt(e.target.value))}
     >
       {teamsArray.map((tm) => {
         return (

@@ -1,42 +1,83 @@
-import { useState } from "react";
-import { arrayRange, roundNumber } from "../utils";
+import { useEffect } from "react";
+import { roundNumber } from "../utils";
 import DraftHeader from "./DraftHeader";
 import DraftBoard from "./DraftBoard";
 import DraftPanel from "./DraftPanel";
 import SettingsForm from "./SettingsForm";
 import SettingsModal from "./SettingsModal";
-import useLocalStorage from "../hooks/useLocalStorage";
 import { useDraftSettingsStore } from "../store/draftSettingsStore";
+import { useDraftStore } from "../store/draftStore";
+import { useDashboardSettingsStore } from "../store/dashboardSettingsStore";
 
 function Dashboard({ data }) {
+  const [counter, picks, assignPlayer, removePlayer, selectedPlayers] =
+    useDraftStore((state) => [
+      state.counter,
+      state.picks,
+      state.assignPlayer,
+      state.removePlayer,
+      state.selectedPlayers,
+    ]);
   const draftSettings = useDraftSettingsStore((state) => state.draftSettings);
+  const { adp, scoring } = draftSettings;
+  const roster = useDashboardSettingsStore((state) => state.roster);
 
-  const [roster, setRoster] = useState(1);
-  const [draftState, setDraftState] = useLocalStorage(
-    "FPG_DRAFT",
-    draftObject(draftSettings, data)
+  const selectedAndProjectedPlayers = new Set(
+    picks
+      .map((pick) => pick.player?.id)
+      .filter((playerId) => playerId !== undefined)
   );
 
-  const { counter, picks, freeAgents } = draftState;
-  const { teams, rounds } = draftSettings;
-
-  const isFirstPick = counter === 0;
-  const isLastPick = counter === teams * rounds;
-  const prevPick = picks[counter - 1] || {
-    player: { first_name: "", last_name: "", position: "" },
-  };
-  const uniquePositions = [...new Set(data.map((elem) => elem.position))];
+  const freeAgents = data
+    .map((elem) => {
+      return {
+        id: elem.id,
+        first_name: elem.first_name,
+        last_name: elem.last_name,
+        position: elem.position,
+        adp: elem.stats[`adp_${adp}`] || 999,
+        fpts: roundNumber(
+          Object.keys(scoring).reduce((total, key) => {
+            return total + scoring[key] * (elem.stats[key] || 0);
+          }, 0),
+          1
+        ),
+      };
+    })
+    .filter((elem) => elem.adp < 999 || elem.fpts > 0)
+    .filter((elem) => !selectedPlayers.includes(elem.id))
+    .sort((a, b) => {
+      return a.adp - b.adp || b.fpts - a.fpts;
+    });
 
   const currentPick = picks[counter];
   const nextPick = picks
     .slice(counter + 2) // 2 because we want to ignore the pick at the turn
     .find((elem) => currentPick.team === elem.team);
-  const picksInBetween = nextPick.overall - currentPick.overall;
+  const picksBeforeYou = nextPick.overall - currentPick.overall;
+  const picksInBewteen = picks.slice(counter, counter + picksBeforeYou);
+
+  useEffect(() => {
+    picks.slice(counter).forEach((pick) => {
+      removePlayer(pick.overall - 1);
+    });
+
+    picksInBewteen.forEach((pick, index) => {
+      const projectedPlayer = freeAgents[index];
+      const { id, first_name, last_name, position } = projectedPlayer;
+      assignPlayer(
+        { id, first_name, last_name, position, isProjection: true },
+        pick.overall - 1
+      );
+    });
+  }, [counter, draftSettings]);
+
+  const uniquePositions = [...new Set(data.map((elem) => elem.position))];
 
   const replacements = [];
   for (let pos of uniquePositions) {
     let replacement = freeAgents
-      .slice(picksInBetween)
+      .filter((elem) => !selectedAndProjectedPlayers.has(elem.id))
       .find((elem) => elem.position === pos) || {
       first_name: "N/A",
       last_name: "",
@@ -48,42 +89,11 @@ function Dashboard({ data }) {
   }
 
   const currentRoster = picks.filter(
-    (elem) => elem.team === roster && Object.keys(elem.player).length > 0
+    (elem) =>
+      elem.team === roster &&
+      !elem.player.isProjection &&
+      Object.keys(elem.player).length > 0
   );
-
-  function selectPlayer(playerId) {
-    const selectedPlayer = freeAgents.find((player) => player.id === playerId);
-    setDraftState({
-      ...draftState,
-      picks: [
-        ...picks.slice(0, counter),
-        {
-          ...picks[counter],
-          player: selectedPlayer,
-        },
-        ...picks.slice(counter + 1),
-      ],
-      freeAgents: freeAgents.filter((player) => player.id !== playerId),
-      counter: counter + 1,
-    });
-  }
-
-  function undoPrevPick() {
-    const selectedPlayer = prevPick.player;
-    setDraftState({
-      ...draftState,
-      picks: [
-        ...picks.slice(0, counter - 1),
-        {
-          ...picks[counter - 1],
-          player: {},
-        },
-        ...picks.slice(counter),
-      ],
-      freeAgents: [...freeAgents, selectedPlayer],
-      counter: counter - 1,
-    });
-  }
 
   const freeAgentsRanked = freeAgents
     .map((elem) => {
@@ -120,19 +130,13 @@ function Dashboard({ data }) {
       </SettingsModal>
       <main className="grid min-h-screen grid-rows-[80px_auto_50vh]">
         <DraftHeader />
-        <DraftBoard data={picks} teams={teams} rounds={rounds} />
+        <DraftBoard />
         <DraftPanel
           freeAgentsRanked={freeAgentsRanked}
-          selectPlayer={selectPlayer}
-          isFirstPick={isFirstPick}
-          isLastPick={isLastPick}
-          undoPrevPick={undoPrevPick}
           currentPick={currentPick}
           nextPick={nextPick}
-          picksInBetween={picksInBetween}
+          picksBeforeYou={picksBeforeYou}
           replacements={replacements}
-          teams={teams}
-          setRoster={setRoster}
           currentRoster={currentRoster}
         />
       </main>
@@ -141,59 +145,3 @@ function Dashboard({ data }) {
 }
 
 export default Dashboard;
-
-function draftPicks(teams, rounds) {
-  const picks = [];
-  let ov = 1;
-  for (let i = 1; i <= rounds + 2; i++) {
-    let order;
-    if (i % 2 === 1) {
-      order = arrayRange(1, teams, 1);
-    } else {
-      order = arrayRange(1, teams, 1).reverse();
-    }
-    for (let j of order) {
-      let pick = {};
-      pick.overall = ov;
-      pick.round = i;
-      pick.number = order[j - 1];
-      pick.team = j;
-      pick.player = {};
-      picks.push(pick);
-      ov++;
-    }
-  }
-  return picks;
-}
-
-function draftObject(draftSettings, data) {
-  const { scoring, adp, teams, rounds } = draftSettings;
-  const counter = 0;
-  const picks = draftPicks(teams, rounds);
-  const freeAgents = data
-    .map((elem) => {
-      return {
-        id: elem.id,
-        first_name: elem.first_name,
-        last_name: elem.last_name,
-        position: elem.position,
-        adp: elem.stats[`adp_${adp}`] || 999,
-        fpts: roundNumber(
-          Object.keys(scoring).reduce((total, key) => {
-            return total + scoring[key] * (elem.stats[key] || 0);
-          }, 0),
-          1
-        ),
-      };
-    })
-    .filter((elem) => elem.adp < 999 || elem.fpts > 0)
-    .sort((a, b) => {
-      return a.adp - b.adp || b.fpts - a.fpts;
-    });
-
-  return {
-    counter,
-    picks,
-    freeAgents,
-  };
-}
