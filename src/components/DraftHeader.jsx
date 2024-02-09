@@ -1,7 +1,17 @@
-import { SETTINGS_TEXT } from "../data/settings_data";
 import { IoMdSettings } from "react-icons/io";
+import { useDashboardSettingsStore } from "../store/dashboardSettingsStore";
+import { useDraftSettingsStore } from "../store/draftSettingsStore";
+import { ADP_TEXT } from "../data/settings_data";
 
-function DraftHeader({ settings, onOpen }) {
+function DraftHeader() {
+  const updateIsModalOpen = useDashboardSettingsStore(
+    (state) => state.updateIsModalOpen
+  );
+
+  const { teams, rounds, adp } = useDraftSettingsStore(
+    (state) => state.draftSettings
+  );
+
   return (
     <section className="flex justify-between items-center px-5 pt-5 bg-white">
       <h1 className="font-bold sm:text-base text-xs">
@@ -10,16 +20,13 @@ function DraftHeader({ settings, onOpen }) {
       <div className="flex sm:gap-6 gap-2 text-end">
         <div>
           <p className="sm:text-2xl font-semibold">
-            {settings.teams} Teams · {settings.rounds} Rounds
+            {teams} Teams · {rounds} Rounds
           </p>
-          <p className="sm:text-base text-xs">
-            Scoring {SETTINGS_TEXT[settings.scoring]} · ADP{" "}
-            {SETTINGS_TEXT[settings.adp]}
-          </p>
+          <p className="sm:text-base text-xs">ADP {ADP_TEXT[adp]}</p>
         </div>
         <IoMdSettings
           className="sm:text-5xl text-[40px] sm:text-[56px] cursor-pointer text-gray-400 hover:text-black"
-          onClick={onOpen}
+          onClick={() => updateIsModalOpen(true)}
         />
       </div>
     </section>

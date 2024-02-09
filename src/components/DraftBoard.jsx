@@ -1,8 +1,15 @@
+import { useDraftSettingsStore } from "../store/draftSettingsStore";
+import { useDraftStore } from "../store/draftStore";
 import { arrayRange } from "../utils";
 import BoardCard from "./BoardCard";
 import { useEffect } from "react";
 
-function DraftBoard({ data, teams, rounds, scoring, adp, onOpen }) {
+function DraftBoard() {
+  const { teams, rounds } = useDraftSettingsStore(
+    (state) => state.draftSettings
+  );
+  const picks = useDraftStore((state) => state.picks);
+
   const teamsArray = arrayRange(0, teams - 1, 1);
   const roundsArray = arrayRange(0, rounds - 1, 1);
 
@@ -13,7 +20,7 @@ function DraftBoard({ data, teams, rounds, scoring, adp, onOpen }) {
       let scroll = window.scrollY;
       headerClone.style.transform = `translateY(${scroll}px)`;
       if (scroll > 4 * 20) {
-        //20 * 4 comes from the -top-20 class in header clone
+        //20 * 4 comes from the "-top-20" class in header clone
         headerClone.style.opacity = 1;
       } else {
         headerClone.style.opacity = 0;
@@ -63,7 +70,7 @@ function DraftBoard({ data, teams, rounds, scoring, adp, onOpen }) {
                 {teamsArray.map((tm) => {
                   return (
                     <div key={tm} className="mb-2">
-                      <BoardCard pick={data[teams * rd + tm]} />
+                      <BoardCard pick={picks[teams * rd + tm]} />
                     </div>
                   );
                 })}

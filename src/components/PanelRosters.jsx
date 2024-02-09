@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-table";
 import RostersDropdown from "./RostersDropdown";
 
-function PanelRosters({ data, teams, setRoster }) {
+function PanelRosters({ data }) {
   const [sorting, setSorting] = useState([]);
 
   const columnHelper = createColumnHelper();
@@ -44,7 +44,7 @@ function PanelRosters({ data, teams, setRoster }) {
       <div className="h-1/6">
         <h2 className="text-xl font-semibold">ROSTER</h2>
         <div className="flex justify-center">
-          <RostersDropdown teams={teams} setRoster={setRoster} />
+          <RostersDropdown />
         </div>
       </div>
       <div className="h-5/6 overflow-x-auto">

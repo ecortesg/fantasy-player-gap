@@ -10,16 +10,53 @@ import {
 import RankingsPlayerFilter from "./RankingsPlayerFilter";
 import RankingsPositionFilter from "./RankingsPositionFilter";
 import { IoMdAddCircle } from "react-icons/io";
+import { useDraftStore } from "../store/draftStore";
+import { useDraftSettingsStore } from "../store/draftSettingsStore";
 
-function PanelRankings({
-  data,
-  selectPlayer,
-  isFirstPick,
-  isLastPick,
-  undoPrevPick,
-}) {
+function PanelRankings({ data }) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
+
+  const [
+    assignPlayer,
+    removePlayer,
+    counter,
+    increaseCounter,
+    decreaseCounter,
+    addSelectedPlayer,
+    removeSelectedPlayer,
+  ] = useDraftStore((state) => [
+    state.assignPlayer,
+    state.removePlayer,
+    state.counter,
+    state.increaseCounter,
+    state.decreaseCounter,
+    state.addSelectedPlayer,
+    state.removeSelectedPlayer,
+  ]);
+
+  const { teams, rounds } = useDraftSettingsStore(
+    (state) => state.draftSettings
+  );
+
+  const isFirstPick = counter === 0;
+  const isLastPick = counter === teams * rounds;
+
+  function selectPlayer(playerProps) {
+    const { id, first_name, last_name, position } = playerProps;
+    assignPlayer(
+      { id, first_name, last_name, position, isProjection: false },
+      counter
+    );
+    increaseCounter();
+    addSelectedPlayer(id);
+  }
+
+  function undoPrevPick() {
+    removePlayer(counter - 1);
+    decreaseCounter();
+    removeSelectedPlayer();
+  }
 
   const columnHelper = createColumnHelper();
   const columns = [
@@ -28,10 +65,11 @@ function PanelRankings({
       header: "",
       cell: (props) => (
         <button
+          type="button"
           className={`text-2xl  flex ${
             isLastPick ? "text-teal-200" : "cursor-pointer text-teal-500"
           }`}
-          onClick={() => selectPlayer(props.row.original.id)}
+          onClick={() => selectPlayer(props.row.original)}
           disabled={isLastPick}
         >
           <IoMdAddCircle />
@@ -85,10 +123,9 @@ function PanelRankings({
           onChange={(value) => playerColumn.setFilterValue(value)}
         />
         <button
+          type="button"
           className={`rounded px-3 py-1 text-white shadow m-auto sm:text-base text-xs ${
-            isFirstPick
-              ? "bg-red-300"
-              : "cursor-pointer bg-red-500 hover:bg-red-400"
+            isFirstPick ? "bg-red-300" : "cursor-pointer bg-red-500"
           }`}
           disabled={isFirstPick}
           onClick={undoPrevPick}

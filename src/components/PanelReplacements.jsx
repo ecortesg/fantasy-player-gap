@@ -7,7 +7,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-function PanelReplacements({ data, currentPick, nextPick, picksInBetween }) {
+function PanelReplacements({ data, currentPick, nextPick, picksBeforeYou }) {
   const [sorting, setSorting] = useState([]);
 
   const columnHelper = createColumnHelper();
@@ -100,8 +100,8 @@ function PanelReplacements({ data, currentPick, nextPick, picksInBetween }) {
           <p className="text-sm">Next Pick</p>
         </div>
         <div className="text-center">
-          <p className="font-semibold text-xl">{picksInBetween}</p>
-          <p className="text-sm">In Between</p>
+          <p className="font-semibold text-xl">{picksBeforeYou}</p>
+          <p className="text-sm">Before You</p>
         </div>
       </div>
     </div>
