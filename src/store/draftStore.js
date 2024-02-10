@@ -45,6 +45,7 @@ export const useDraftStore = create(
         set(() => ({
           counter: 0,
           selectedPlayers: [],
+          picks: draftPicks(useDraftSettingsStore.getState().draftSettings),
         })),
     }),
     {

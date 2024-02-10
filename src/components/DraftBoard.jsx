@@ -19,7 +19,7 @@ function DraftBoard() {
     window.onscroll = () => {
       let scroll = window.scrollY;
       headerClone.style.transform = `translateY(${scroll}px)`;
-      if (scroll > 4 * 20) {
+      if (scroll > 4 * 14) {
         //20 * 4 comes from the "-top-20" class in header clone
         headerClone.style.opacity = 1;
       } else {
@@ -29,11 +29,11 @@ function DraftBoard() {
   }, []);
 
   return (
-    <section className="overflow-x-auto flex">
+    <section className="overflow-x-auto flex bg-slate-50">
       <div className="min-w-screen m-auto relative">
         <div
           id="board-header-clone"
-          className="flex mx-2 gap-2 bg-white z-10 absolute -top-20"
+          className="flex mx-2 gap-2 bg-slate-50 z-10 absolute -top-14"
         >
           {teamsArray.map((tm) => {
             return (
@@ -46,12 +46,12 @@ function DraftBoard() {
             );
           })}
         </div>
-        <div id="board-header" className="flex mx-2 gap-2 bg-white">
+        <div id="board-header" className="flex mx-2 gap-2 bg-slate-50">
           {teamsArray.map((tm) => {
             return (
               <div
                 key={tm}
-                className="w-36 h-16 flex justify-center items-center"
+                className="w-36 h-14 flex justify-center items-center"
               >
                 <p>Team {tm + 1}</p>
               </div>

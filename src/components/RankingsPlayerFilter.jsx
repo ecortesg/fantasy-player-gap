@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { VscClose } from "react-icons/vsc";
 
 function RankingsPlayerFilter({ column, onChange, debounce = 500 }) {
   const columnFilterValue = column.getFilterValue() ?? "";
@@ -17,13 +18,21 @@ function RankingsPlayerFilter({ column, onChange, debounce = 500 }) {
   }, [value]);
 
   return (
-    <input
-      className="border md:w-1/3 rounded px-2 my-auto shadow"
-      type="text"
-      placeholder="Find player"
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-    />
+    <div className="relative">
+      <input
+        className="border rounded pl-2 pr-8 py-1 bg-slate-200 border-none outline-none"
+        type="text"
+        placeholder="Find player"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+      {value !== "" && (
+        <VscClose
+          className="absolute right-1 top-[3px] h-7 w-7 rounded-full cursor-pointer"
+          onClick={() => setValue("")}
+        />
+      )}
+    </div>
   );
 }
 

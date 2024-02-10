@@ -6,6 +6,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
 
 function PanelReplacements({ data, currentPick, nextPick, picksBeforeYou }) {
   const [sorting, setSorting] = useState([]);
@@ -16,15 +17,19 @@ function PanelReplacements({ data, currentPick, nextPick, picksBeforeYou }) {
       columnHelper.accessor((row) => `${row.first_name} ${row.last_name}`, {
         id: "player",
         header: "Player",
+        size: 200,
       }),
       columnHelper.accessor("position", {
         header: "Position",
+        size: 100,
       }),
       columnHelper.accessor("adp", {
         header: "ADP",
+        size: 100,
       }),
       columnHelper.accessor("fpts", {
         header: "FPts",
+        size: 100,
       }),
     ],
     []
@@ -44,16 +49,20 @@ function PanelReplacements({ data, currentPick, nextPick, picksBeforeYou }) {
       <h2 className="h-1/6 text-xl font-semibold">REPLACEMENTS</h2>
       <div className="overflow-x-auto">
         <table className="w-full table-auto">
-          <thead className="border-b sticky top-0 bg-gray-100">
+          <thead className="border-b sticky top-0 bg-white">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <th key={header.id} colSpan={header.colSpan}>
+                  <th
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    style={{ width: header.getSize() }}
+                  >
                     {header.isPlaceholder ? null : (
                       <div
                         {...{
                           className: header.column.getCanSort()
-                            ? "cursor-pointer select-none"
+                            ? "cursor-pointer p-1 flex items-center"
                             : "",
                           onClick: header.column.getToggleSortingHandler(),
                         }}
@@ -61,11 +70,15 @@ function PanelReplacements({ data, currentPick, nextPick, picksBeforeYou }) {
                         {flexRender(
                           header.column.columnDef.header,
                           header.getContext()
-                        )}
-                        {{
-                          asc: " ↑",
-                          desc: " ↓",
-                        }[header.column.getIsSorted()] ?? null}
+                        )}{" "}
+                        {header.column.getCanSort()
+                          ? {
+                              asc: <FaSortUp className="h-3" />,
+                              desc: <FaSortDown className="h-3" />,
+                            }[header.column.getIsSorted()] ?? (
+                              <FaSort className="h-3" />
+                            )
+                          : ""}
                       </div>
                     )}
                   </th>
@@ -74,8 +87,13 @@ function PanelReplacements({ data, currentPick, nextPick, picksBeforeYou }) {
             ))}
           </thead>
           <tbody className="overflow-y-auto">
-            {table.getRowModel().rows.map((row) => (
-              <tr className="border-b hover:bg-gray-200" key={row.id}>
+            {table.getRowModel().rows.map((row, index) => (
+              <tr
+                className={`border-b hover:bg-slate-200 ${
+                  index % 2 === 0 ? "bg-slate-100" : ""
+                }`}
+                key={row.id}
+              >
                 {row.getVisibleCells().map((cell) => (
                   <td className="whitespace-nowrap px-2" key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

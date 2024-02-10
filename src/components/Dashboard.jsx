@@ -128,7 +128,7 @@ function Dashboard({ data }) {
       <SettingsModal>
         <SettingsForm />
       </SettingsModal>
-      <main className="grid min-h-screen grid-rows-[80px_auto_50vh]">
+      <main className="grid min-h-screen grid-rows-[56px_auto_50vh]">
         <DraftHeader />
         <DraftBoard />
         <DraftPanel
