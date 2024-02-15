@@ -140,7 +140,7 @@ function PanelRankings({ data }) {
 
   return (
     <div className="h-full">
-      <div className="h-1/6 flex flex-col">
+      <div className="h-1/6 flex flex-col gap-2">
         <div className="flex justify-between">
           <PlayerTextField
             column={playerColumn}
@@ -159,7 +159,7 @@ function PanelRankings({ data }) {
             UNDO
           </button>
         </div>
-        <div className="flex flex-1 items-center gap-2 shrink-0 flex-wrap md:justify-start justify-center">
+        <div className="flex flex-1 items-center gap-x-2 shrink-0 flex-wrap md:justify-start justify-center">
           <PositionPill
             key="ALL"
             label="ALL"
@@ -289,7 +289,7 @@ function PlayerTextField({ column, onChange, debounce = 500 }) {
       />
       {value !== "" && (
         <VscClose
-          className="absolute right-1 top-[3px] h-7 w-7 rounded-full cursor-pointer"
+          className="absolute right-1 top-0 h-7 w-7 rounded-full cursor-pointer"
           onClick={() => setValue("")}
         />
       )}
