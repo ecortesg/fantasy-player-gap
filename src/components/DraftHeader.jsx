@@ -1,8 +1,4 @@
-import {
-  MdOutlineLightMode,
-  MdOutlineDarkMode,
-  MdSettings,
-} from "react-icons/md";
+import { MdLightMode, MdDarkMode, MdSettings } from "react-icons/md";
 import { useDashboardSettingsStore } from "../store/dashboardSettingsStore";
 import { useDraftSettingsStore } from "../store/draftSettingsStore";
 import { ADP_TEXT } from "../data/settings_data";
@@ -43,13 +39,13 @@ function DraftHeader() {
           />
         </a>
         {theme === "dark" ? (
-          <MdOutlineDarkMode
+          <MdDarkMode
             className="cursor-pointer rounded-full mr-2"
             size={32}
             onClick={() => changeTheme()}
           />
         ) : (
-          <MdOutlineLightMode
+          <MdLightMode
             className="cursor-pointer rounded-full mr-2"
             size={32}
             onClick={() => changeTheme()}
