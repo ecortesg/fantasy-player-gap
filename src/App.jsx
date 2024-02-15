@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getProjections } from "./api/projections";
 import Dashboard from "./components/Dashboard";
 import { AiOutlineLoading } from "react-icons/ai";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { useDraftSettingsStore } from "./store/draftSettingsStore";
 
 function App() {
@@ -20,6 +20,15 @@ function App() {
       htmlClassList.add("dark");
     } else {
       htmlClassList.remove("dark");
+    }
+  }, [theme]);
+
+  useLayoutEffect(() => {
+    const metaThemeColor = document.querySelector("meta[name=theme-color]");
+    if (theme === "dark") {
+      metaThemeColor.setAttribute("content", "#1e293b"); // slate-800
+    } else {
+      metaThemeColor.setAttribute("content", "#f8fafc"); // slate-50
     }
   }, [theme]);
 

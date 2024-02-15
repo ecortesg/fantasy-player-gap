@@ -140,15 +140,15 @@ function PanelRankings({ data }) {
 
   return (
     <div className="h-full">
-      <div className="h-1/6">
-        <div className="flex justify-between mb-4">
+      <div className="h-1/6 flex flex-col">
+        <div className="flex justify-between">
           <PlayerTextField
             column={playerColumn}
             onChange={handlePlayerChange}
           />
           <button
             type="button"
-            className={`rounded px-3 py-1 shadow text-base ${
+            className={`rounded px-3 py-0.5 shadow text-base ${
               isFirstPick
                 ? "bg-slate-300 dark:bg-slate-800 text-slate-500"
                 : "cursor-pointer bg-red-500 text-white"
@@ -159,7 +159,7 @@ function PanelRankings({ data }) {
             UNDO
           </button>
         </div>
-        <div className="flex gap-2 shrink-0 flex-wrap md:justify-start justify-center">
+        <div className="flex flex-1 items-center gap-2 shrink-0 flex-wrap md:justify-start justify-center">
           <PositionPill
             key="ALL"
             label="ALL"
@@ -182,7 +182,7 @@ function PanelRankings({ data }) {
           })}
         </div>
       </div>
-      <div className="overflow-x-auto h-5/6">
+      <div className="h-5/6 overflow-x-auto">
         <table className="w-full">
           <thead className="border-b sticky top-0 bg-white dark:bg-slate-700">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -281,7 +281,7 @@ function PlayerTextField({ column, onChange, debounce = 500 }) {
   return (
     <div className="relative">
       <input
-        className="border rounded pl-2 pr-8 py-1 bg-slate-200 dark:bg-slate-800 border-none outline-none"
+        className="border rounded pl-2 pr-8 py-0.5 bg-slate-200 dark:bg-slate-800 border-none outline-none"
         type="text"
         placeholder="Find player"
         value={value}
