@@ -152,7 +152,7 @@ function SettingsSection({
         return (
           <div
             key={field.id}
-            className="flex w-full mb-4 justify-between items-center"
+            className="flex w-full mb-4 justify-between items-center gap-2"
           >
             <label htmlFor={field.id}>{field.label}</label>
             <input

@@ -1,7 +1,7 @@
 import {
   MdOutlineLightMode,
   MdOutlineDarkMode,
-  MdOutlineSettings,
+  MdSettings,
 } from "react-icons/md";
 import { useDashboardSettingsStore } from "../store/dashboardSettingsStore";
 import { useDraftSettingsStore } from "../store/draftSettingsStore";
@@ -55,7 +55,7 @@ function DraftHeader() {
             onClick={() => changeTheme()}
           />
         )}
-        <MdOutlineSettings
+        <MdSettings
           className="cursor-pointer rounded-ful"
           size={32}
           onClick={() => updateIsModalOpen(true)}
