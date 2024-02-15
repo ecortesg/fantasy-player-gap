@@ -5,10 +5,13 @@ import { DEFAULT_SETTINGS } from "../data/settings_data";
 export const useDraftSettingsStore = create(
   persist(
     (set) => ({
-      draftSettings: DEFAULT_SETTINGS,
-      updateDraftSettings: (newSettings) =>
-        set(() => ({
-          draftSettings: newSettings,
+      ...DEFAULT_SETTINGS,
+      updateSettings: (newSettings) =>
+        set((state) => ({ ...state, ...newSettings })),
+      theme: "light",
+      changeTheme: () =>
+        set((state) => ({
+          theme: state.theme === "light" ? "dark" : "light",
         })),
     }),
     {

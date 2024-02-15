@@ -4,9 +4,10 @@ import { arrayRange } from "../utils";
 import { useEffect } from "react";
 
 function DraftBoard() {
-  const { teams, rounds } = useDraftSettingsStore(
-    (state) => state.draftSettings
-  );
+  const [teams, rounds] = useDraftSettingsStore((state) => [
+    state.teams,
+    state.rounds,
+  ]);
   const picks = useDraftStore((state) => state.picks);
 
   const teamsArray = arrayRange(0, teams - 1, 1);
@@ -28,11 +29,11 @@ function DraftBoard() {
   }, []);
 
   return (
-    <section className="overflow-x-auto flex bg-slate-50">
-      <div className="min-w-screen m-auto relative">
+    <section className="overflow-x-auto flex bg-slate-50 dark:bg-slate-800">
+      <div className="m-auto relative">
         <div
           id="board-header-clone"
-          className="flex mx-2 gap-2 bg-slate-50 z-10 absolute -top-14"
+          className="flex mx-2 gap-2 bg-slate-50 dark:bg-slate-800 dark:text-white z-10 absolute -top-14"
         >
           {teamsArray.map((tm) => {
             return (
@@ -45,7 +46,10 @@ function DraftBoard() {
             );
           })}
         </div>
-        <div id="board-header" className="flex mx-2 gap-2 bg-slate-50">
+        <div
+          id="board-header"
+          className="flex mx-2 gap-2 bg-slate-50 dark:bg-slate-800 dark:text-white"
+        >
           {teamsArray.map((tm) => {
             return (
               <div
@@ -57,7 +61,7 @@ function DraftBoard() {
             );
           })}
         </div>
-        <div id="board-body" className="">
+        <div id="board-body" className="mb-8">
           {roundsArray.map((rd) => {
             return (
               <div
@@ -96,10 +100,13 @@ function BoardCard({ pick }) {
 
   return (
     <div
-      className={`px-2 w-36 h-16 text-sm ${
-        colors[pick.player.position] || "bg-slate-300"
+      className={`font-semibold px-2 w-36 h-16 text-sm ${
+        colors[pick.player.position] ||
+        "bg-slate-300 dark:bg-slate-700 dark:text-white"
       } ${
-        pick.player.isProjection ? "bg-opacity-40 opacity-50" : "bg-opacity-50"
+        pick.player.isProjection
+          ? "text-slate-950 brightness-105 opacity-40"
+          : "bg-opacity-80"
       } rounded-lg relative text-sm`}
     >
       <p className="absolute top-0 right-2">

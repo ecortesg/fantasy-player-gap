@@ -45,11 +45,13 @@ function PanelReplacements({ data, currentPick, nextPick, picksBeforeYou }) {
   });
 
   return (
-    <div className="flex flex-col h-full xl:gap-0 gap-4">
-      <h2 className="h-1/6 text-xl font-semibold">REPLACEMENTS</h2>
+    <div className="h-full flex flex-col">
+      <h2 className="h-1/6 text-lg font-semibold text-center md:text-left">
+        REPLACEMENTS
+      </h2>
       <div className="overflow-x-auto">
-        <table className="w-full table-auto">
-          <thead className="border-b sticky top-0 bg-white">
+        <table className="w-full">
+          <thead className="border-b sticky top-0 bg-white dark:bg-slate-700">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -86,11 +88,11 @@ function PanelReplacements({ data, currentPick, nextPick, picksBeforeYou }) {
               </tr>
             ))}
           </thead>
-          <tbody className="overflow-y-auto">
+          <tbody>
             {table.getRowModel().rows.map((row, index) => (
               <tr
-                className={`border-b hover:bg-slate-200 ${
-                  index % 2 === 0 ? "bg-slate-100" : ""
+                className={`border-b hover:bg-slate-200 dark:hover:bg-slate-800 border-none ${
+                  index % 2 === 0 ? "bg-slate-100 dark:bg-slate-600" : ""
                 }`}
                 key={row.id}
               >

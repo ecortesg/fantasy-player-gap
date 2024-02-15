@@ -77,10 +77,6 @@ export const PASSING = [
     label: "Pass Intercepted",
   },
   {
-    id: "pass_int_td",
-    label: "Pick 6 Thrown",
-  },
-  {
     id: "pass_cmp",
     label: "Pass Completed",
   },
@@ -172,7 +168,42 @@ export const RECEIVING = [
   },
 ];
 
+export const KICKING = [
+  {
+    id: "fgm_40_49",
+    label: "FG Made (40-49 Yards)",
+  },
+  {
+    id: "fgm_50p",
+    label: "FG Made (50+ Yards)",
+  },
+  {
+    id: "fgm_yds",
+    label: "Points Per FG Yard",
+  },
+  {
+    id: "xpm",
+    label: "PAT Made",
+  },
+  {
+    id: "fgmiss_40_49",
+    label: "FG Missed (40-49 Yards)",
+  },
+  {
+    id: "fgmiss_50p",
+    label: "FG Missed (50+ Yards)",
+  },
+  {
+    id: "xpmiss",
+    label: "PAT Missed",
+  },
+];
+
 export const DEFENSE = [
+  {
+    id: "pass_int_td",
+    label: "Defense TD",
+  },
   {
     id: "pts_allow_0",
     label: "Points Allowed 0",
@@ -208,6 +239,10 @@ export const MISC = [
     id: "fum_lost",
     label: "Fumble Lost",
   },
+  {
+    id: "def_fum_td",
+    label: "Fumble Recovery TD",
+  },
 ];
 
 export const DEFAULT_SETTINGS = {
@@ -219,8 +254,7 @@ export const DEFAULT_SETTINGS = {
     pass_td: "4",
     pass_fd: "0",
     pass_2pt: "2",
-    pass_int: "-2",
-    pass_int_td: "0",
+    pass_int: "-1",
     pass_cmp: "0",
     pass_att: "0",
     rush_yd: "0.1",
@@ -242,13 +276,22 @@ export const DEFAULT_SETTINGS = {
     bonus_rec_rb: "0",
     bonus_rec_wr: "0",
     bonus_rec_te: "0",
-    pts_allow_0: "10",
+    fgm_40_49: "4",
+    fgm_50p: "5",
+    fgm_yds: "0",
+    fgmiss_40_49: "0",
+    fgmiss_50p: "0",
+    xpm: "1",
+    xpmiss: "-1",
+    pts_allow_0: "0",
     yds_allow_0_100: "0",
     sack: "1",
     int: "2",
     fum_rec: "2",
     safe: "2",
     blk_kick: "2",
+    pass_int_td: "0",
+    def_fum_td: "0",
     fum_lost: "-2",
   },
 };
@@ -263,7 +306,6 @@ const PROJECTED_STATS = [
   "pass_cmp",
   "pass_att",
   "cmp_pct",
-  "pass_int_td",
   /* Rushing */
   "rush_yd",
   "rush_td",
@@ -286,20 +328,29 @@ const PROJECTED_STATS = [
   "bonus_rec_rb",
   "bonus_rec_te",
   /* Defense */
-  "pts_allow_0",
-  "yds_allow_0_100",
-  "sack",
-  "int",
-  "fum_rec",
-  "safe",
   "blk_kick",
+  "def_fum_td",
+  "fum_rec",
+  "int",
+  "pass_int_td",
+  "pts_allow_0",
+  "sack",
+  "safe",
+  "yds_allow_0_100",
+  /* Kicking */
+  "fgm_40_49",
+  "fgm_50p",
+  "fgm_yds",
+  "fgmiss_40_49",
+  "fgmiss_50p",
+  "xpm",
+  "xpmiss",
   /* Misc */
   "fum_lost",
   "gp",
   /* Special Teams Player */
   "pr_td",
   "def_kr_td",
-  "def_fum_td", // ?
   /* Fantasy points */
   "pts_std",
   "pts_ppr",

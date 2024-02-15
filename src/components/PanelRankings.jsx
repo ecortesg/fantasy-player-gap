@@ -10,7 +10,7 @@ import {
 import { useDraftStore } from "../store/draftStore";
 import { useDraftSettingsStore } from "../store/draftSettingsStore";
 import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
-import { IoMdAddCircle } from "react-icons/io";
+import { IoMdAdd } from "react-icons/io";
 import { VscClose } from "react-icons/vsc";
 
 function PanelRankings({ data }) {
@@ -38,9 +38,10 @@ function PanelRankings({ data }) {
     state.removeSelectedPlayer,
   ]);
 
-  const { teams, rounds } = useDraftSettingsStore(
-    (state) => state.draftSettings
-  );
+  const [teams, rounds] = useDraftSettingsStore((state) => [
+    state.teams,
+    state.rounds,
+  ]);
 
   const isFirstPick = counter === 0;
   const isLastPick = counter === teams * rounds;
@@ -70,13 +71,15 @@ function PanelRankings({ data }) {
       cell: (props) => (
         <button
           type="button"
-          className={`text-2xl flex ${
-            isLastPick ? "text-blue-300" : "cursor-pointer text-blue-500"
+          className={`h-full rounded-full flex text-xl text-white ${
+            isLastPick
+              ? "bg-blue-300 dark:bg-indigo-300"
+              : "cursor-pointer bg-blue-500 dark:bg-indigo-500"
           }`}
           onClick={() => selectPlayer(props.row.original)}
           disabled={isLastPick}
         >
-          <IoMdAddCircle />
+          <IoMdAdd />
         </button>
       ),
     }),
@@ -136,17 +139,19 @@ function PanelRankings({ data }) {
   }
 
   return (
-    <>
-      <div className="sm:h-1/6">
+    <div className="h-full">
+      <div className="h-1/6">
         <div className="flex justify-between mb-4">
-          <RankingsPlayerFilter
+          <PlayerTextField
             column={playerColumn}
             onChange={handlePlayerChange}
           />
           <button
             type="button"
-            className={`rounded px-3 py-1 text-white shadow sm:text-base text-xs ${
-              isFirstPick ? "bg-red-300" : "cursor-pointer bg-red-500"
+            className={`rounded px-3 py-1 shadow text-base ${
+              isFirstPick
+                ? "bg-slate-300 dark:bg-slate-800 text-slate-500"
+                : "cursor-pointer bg-red-500 text-white"
             }`}
             disabled={isFirstPick}
             onClick={undoPrevPick}
@@ -154,8 +159,8 @@ function PanelRankings({ data }) {
             UNDO
           </button>
         </div>
-        <div className="flex gap-2 shrink-0 flex-wrap justify-center sm:justify-start">
-          <PositionFilterPill
+        <div className="flex gap-2 shrink-0 flex-wrap md:justify-start justify-center">
+          <PositionPill
             key="ALL"
             label="ALL"
             position=""
@@ -165,7 +170,7 @@ function PanelRankings({ data }) {
           {Object.keys(positions).map((position) => {
             if (positions[position] > 0) {
               return (
-                <PositionFilterPill
+                <PositionPill
                   key={position}
                   label={position}
                   position={position}
@@ -178,8 +183,8 @@ function PanelRankings({ data }) {
         </div>
       </div>
       <div className="overflow-x-auto h-5/6">
-        <table className="w-full table-auto">
-          <thead className="border-b sticky top-0 bg-white">
+        <table className="w-full">
+          <thead className="border-b sticky top-0 bg-white dark:bg-slate-700">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -218,11 +223,11 @@ function PanelRankings({ data }) {
               </tr>
             ))}
           </thead>
-          <tbody className="overflow-y-auto">
+          <tbody>
             {table.getRowModel().rows.map((row, index) => (
               <tr
-                className={`border-b hover:bg-slate-200 ${
-                  index % 2 === 0 ? "bg-slate-100" : ""
+                className={`border-b hover:bg-slate-200 dark:hover:bg-slate-800 border-none ${
+                  index % 2 === 0 ? "bg-slate-100 dark:bg-slate-600" : ""
                 }`}
                 key={row.id}
               >
@@ -236,24 +241,19 @@ function PanelRankings({ data }) {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 }
 
 export default PanelRankings;
 
-function PositionFilterPill({
-  activePill,
-  position,
-  label,
-  handlePositionChange,
-}) {
+function PositionPill({ activePill, position, label, handlePositionChange }) {
   return (
     <div
       className={`${
         activePill === position
-          ? "bg-blue-500 text-white"
-          : "hover:bg-slate-200 "
+          ? "bg-blue-500 dark:bg-indigo-500 text-white"
+          : "hover:bg-slate-200 dark:hover:bg-slate-600"
       } rounded-full w-12 cursor-pointer text-center`}
       onClick={() => handlePositionChange(position)}
     >
@@ -262,7 +262,7 @@ function PositionFilterPill({
   );
 }
 
-function RankingsPlayerFilter({ column, onChange, debounce = 500 }) {
+function PlayerTextField({ column, onChange, debounce = 500 }) {
   const columnFilterValue = column.getFilterValue() ?? "";
   const [value, setValue] = useState(columnFilterValue);
 
@@ -281,7 +281,7 @@ function RankingsPlayerFilter({ column, onChange, debounce = 500 }) {
   return (
     <div className="relative">
       <input
-        className="border rounded pl-2 pr-8 py-1 bg-slate-200 border-none outline-none"
+        className="border rounded pl-2 pr-8 py-1 bg-slate-200 dark:bg-slate-800 border-none outline-none"
         type="text"
         placeholder="Find player"
         value={value}

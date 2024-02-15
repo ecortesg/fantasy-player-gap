@@ -18,7 +18,7 @@ export const useDraftStore = create(
         set((state) => ({
           selectedPlayers: state.selectedPlayers.slice(0, -1),
         })),
-      picks: draftPicks(useDraftSettingsStore.getState().draftSettings),
+      picks: draftPicks(useDraftSettingsStore.getState()),
       assignPlayer: (player, pick) =>
         set((state) => ({
           picks: state.picks.map((p, index) =>
@@ -45,7 +45,6 @@ export const useDraftStore = create(
         set(() => ({
           counter: 0,
           selectedPlayers: [],
-          picks: draftPicks(useDraftSettingsStore.getState().draftSettings),
         })),
     }),
     {

@@ -4,6 +4,7 @@ import {
   PASSING,
   RUSHING,
   RECEIVING,
+  KICKING,
   DEFENSE,
   MISC,
 } from "../data/settings_data";
@@ -17,13 +18,14 @@ function SettingsForm({ handleSubmit }) {
     (state) => state.updateIsModalOpen
   );
 
-  const [draftSettings, updateDraftSettings] = useDraftSettingsStore(
-    (state) => [state.draftSettings, state.updateDraftSettings]
-  );
+  const [settings, updateSettings] = useDraftSettingsStore((state) => [
+    state,
+    state.updateSettings,
+  ]);
 
   const newDraft = useDraftStore((state) => state.newDraft);
 
-  const [values, setValues] = useState(draftSettings);
+  const [values, setValues] = useState(settings);
 
   function handleChange(e) {
     setValues({ ...values, [e.target.id]: e.target.value });
@@ -38,24 +40,25 @@ function SettingsForm({ handleSubmit }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    updateDraftSettings(values);
+    updateSettings(values);
     updateIsModalOpen(false);
     newDraft();
   }
 
   return (
-    <div className="flex flex-col h-full w-full">
-      <div className="flex w-full h-[10%] justify-between align-middle p-4">
-        <h2 className="text-2xl font-bold">New Draft</h2>
+    <form className="h-full grid grid-rows-12" onSubmit={handleSubmit}>
+      <div className="row-span-1 flex w-full justify-between items-center p-4">
+        <h2 className="text-xl font-bold">New Draft</h2>
         <IoMdClose
-          className="text-3xl cursor-pointer"
+          className="cursor-pointer"
+          size={32}
           onClick={() => updateIsModalOpen(false)}
         />
       </div>
-      <hr />
-      <form className="w-full h-[90%]" onSubmit={handleSubmit}>
-        <div className="overflow-auto h-[85%] w-full p-4">
-          <h3 className="font-semibold text-lg mb-4">GENERAL</h3>
+      <div className="row-span-10 overflow-y-auto p-6">
+        <div className="mb-12">
+          <h3 className="font-semibold text-lg">General</h3>
+          <hr className="my-6" />
           {GENERAL.map((field) => {
             return (
               <div
@@ -68,7 +71,7 @@ function SettingsForm({ handleSubmit }) {
                   id={field.id}
                   value={values[field.id]}
                   onChange={handleChange}
-                  className="border rounded w-1/3 px-2 py-1"
+                  className="w-40 rounded px-2 py-1 bg-slate-200 dark:bg-slate-800 border-none outline-none"
                 >
                   {field.options.map((option) => {
                     return (
@@ -81,47 +84,53 @@ function SettingsForm({ handleSubmit }) {
               </div>
             );
           })}
-          <SettingsSection
-            fields={PASSING}
-            title="SCORING"
-            subtitle="Passing"
-            values={values}
-            handleNestedChange={handleNestedChange}
-          />
-          <SettingsSection
-            fields={RUSHING}
-            subtitle="Rushing"
-            values={values}
-            handleNestedChange={handleNestedChange}
-          />
-          <SettingsSection
-            fields={RECEIVING}
-            subtitle="Receiving"
-            values={values}
-            handleNestedChange={handleNestedChange}
-          />
-          <SettingsSection
-            fields={DEFENSE}
-            subtitle="Defense"
-            values={values}
-            handleNestedChange={handleNestedChange}
-          />
-          <SettingsSection
-            fields={MISC}
-            subtitle="Misc"
-            values={values}
-            handleNestedChange={handleNestedChange}
-          />
         </div>
-        <div className="flex w-full h-[15%] justify-end p-4">
-          <input
-            className="my-auto bg-teal-500 py-2 px-4 rounded cursor-pointer text-white hover:bg-teal-400"
-            type="submit"
-            value="Done"
-          ></input>
-        </div>
-      </form>
-    </div>
+        <SettingsSection
+          fields={PASSING}
+          title="Scoring"
+          subtitle="PASSING"
+          values={values}
+          handleNestedChange={handleNestedChange}
+        />
+        <SettingsSection
+          fields={RUSHING}
+          subtitle="RUSHING"
+          values={values}
+          handleNestedChange={handleNestedChange}
+        />
+        <SettingsSection
+          fields={RECEIVING}
+          subtitle="RECEIVING"
+          values={values}
+          handleNestedChange={handleNestedChange}
+        />
+        <SettingsSection
+          fields={KICKING}
+          subtitle="KICKING"
+          values={values}
+          handleNestedChange={handleNestedChange}
+        />
+        <SettingsSection
+          fields={DEFENSE}
+          subtitle="DEFENSE"
+          values={values}
+          handleNestedChange={handleNestedChange}
+        />
+        <SettingsSection
+          fields={MISC}
+          subtitle="MISC"
+          values={values}
+          handleNestedChange={handleNestedChange}
+        />
+      </div>
+      <div className="row-span-1 flex w-full justify-end items-center p-4">
+        <input
+          className="my-auto bg-blue-500 dark:bg-indigo-500 py-2 px-4 rounded cursor-pointer text-white"
+          type="submit"
+          value="Done"
+        ></input>
+      </div>
+    </form>
   );
 }
 
@@ -136,8 +145,9 @@ function SettingsSection({
 }) {
   return (
     <div>
-      {title && <h3 className="font-semibold text-lg mb-4">{title}</h3>}
-      {subtitle && <h4 className="font-semibold mb-4">{subtitle}</h4>}
+      {title && <h3 className="font-semibold text-lg">{title}</h3>}
+      <hr className="my-6" />
+      {subtitle && <h4 className="font-bold mb-4 text-sm">{subtitle}</h4>}
       {fields.map((field) => {
         return (
           <div
@@ -151,9 +161,7 @@ function SettingsSection({
               step={field.step || "0.1"}
               value={values.scoring[field.id]}
               onChange={handleNestedChange}
-              // onBlur={handleBlur}
-              // onKeyDown={handleKeyDown}
-              className="border rounded py-1 px-2 w-1/3"
+              className="w-40 rounded px-2 py-1 bg-slate-200 dark:bg-slate-800 border-none outline-none"
             />
           </div>
         );

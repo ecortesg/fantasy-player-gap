@@ -18,8 +18,11 @@ function Dashboard({ data }) {
       state.removePlayer,
       state.selectedPlayers,
     ]);
-  const draftSettings = useDraftSettingsStore((state) => state.draftSettings);
-  const { adp, scoring } = draftSettings;
+  const [adp, scoring, teams] = useDraftSettingsStore((state) => [
+    state.adp,
+    state.scoring,
+    state.teams,
+  ]);
   const roster = useDashboardSettingsStore((state) => state.roster);
 
   const selectedAndProjectedPlayers = new Set(
@@ -40,7 +43,7 @@ function Dashboard({ data }) {
           Object.keys(scoring).reduce((total, key) => {
             return total + scoring[key] * (elem.stats[key] || 0);
           }, 0),
-          1
+          2
         ),
       };
     })
@@ -70,7 +73,7 @@ function Dashboard({ data }) {
         pick.overall - 1
       );
     });
-  }, [counter, draftSettings]);
+  }, [counter, adp, scoring, teams]);
 
   const uniquePositions = [...new Set(data.map((elem) => elem.position))];
 

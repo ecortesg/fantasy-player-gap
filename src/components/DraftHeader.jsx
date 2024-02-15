@@ -8,8 +8,14 @@ import { useDraftSettingsStore } from "../store/draftSettingsStore";
 import { ADP_TEXT } from "../data/settings_data";
 
 function DraftHeader() {
-  const { teams, rounds, adp } = useDraftSettingsStore(
-    (state) => state.draftSettings
+  const [teams, rounds, adp, theme, changeTheme] = useDraftSettingsStore(
+    (state) => [
+      state.teams,
+      state.rounds,
+      state.adp,
+      state.theme,
+      state.changeTheme,
+    ]
   );
 
   const updateIsModalOpen = useDashboardSettingsStore(
@@ -17,19 +23,18 @@ function DraftHeader() {
   );
 
   return (
-    <section className="flex justify-between items-center px-4 bg-slate-50">
+    <section className="flex justify-between items-center px-4 bg-slate-50 dark:bg-slate-800 dark:text-white">
       <div>
-        <h1 className="font-bold text-lg">Fantasy Player Gap</h1>
-        <p className="font-semibold text-xs">
+        <h1 className="font-bold text-xl">Fantasy Player Gap</h1>
+        <p className="font-semibold text-sm">
           {teams} Teams · {rounds} Rounds · {ADP_TEXT[adp]}
         </p>
       </div>
-
       <div className="flex items-center justify-between">
         <a
           href="https://ko-fi.com/S6S8QVBNF"
           target="_blank"
-          className="cursor-pointer h-12"
+          className="cursor-pointer h-14"
         >
           <img
             src="kofi-logo.png"
@@ -37,27 +42,22 @@ function DraftHeader() {
             className="h-full rounded-full"
           />
         </a>
-        <MdOutlineDarkMode
-          className="cursor-pointer rounded-full mr-1"
-          size={28}
-          onClick={() => changeTheme()}
-        />
-        {/* {theme === "dark" ? (
+        {theme === "dark" ? (
           <MdOutlineDarkMode
-            className="cursor-pointer rounded-full"
-            size={28}
+            className="cursor-pointer rounded-full mr-2"
+            size={32}
             onClick={() => changeTheme()}
           />
         ) : (
           <MdOutlineLightMode
-            className="cursor-pointer rounded-full"
-            size={28}
+            className="cursor-pointer rounded-full mr-2"
+            size={32}
             onClick={() => changeTheme()}
           />
-        )} */}
+        )}
         <MdOutlineSettings
           className="cursor-pointer rounded-ful"
-          size={28}
+          size={32}
           onClick={() => updateIsModalOpen(true)}
         />
       </div>

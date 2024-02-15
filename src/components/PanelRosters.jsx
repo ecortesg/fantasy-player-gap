@@ -13,6 +13,10 @@ import { arrayRange } from "../utils";
 
 function PanelRosters({ data }) {
   const [sorting, setSorting] = useState([]);
+  const teams = useDraftSettingsStore((state) => state.teams);
+  const updateRoster = useDashboardSettingsStore((state) => state.updateRoster);
+
+  const teamsArray = arrayRange(1, teams, 1);
 
   const columnHelper = createColumnHelper();
   const columns = useMemo(
@@ -46,16 +50,29 @@ function PanelRosters({ data }) {
   });
 
   return (
-    <>
-      <div className="h-1/6">
-        <h2 className="text-xl font-semibold">ROSTER</h2>
-        <div className="flex justify-center">
-          <RostersDropdown />
+    <div className="h-full">
+      <div className="h-1/6 flex flex-col">
+        <h2 className="text-lg font-semibold text-center md:text-left">
+          ROSTER
+        </h2>
+        <div className="flex flex-1 items-center justify-center ">
+          <select
+            className="rounded bg-slate-200 dark:bg-slate-800 border-none outline-none px-2 py-1"
+            onChange={(e) => updateRoster(parseInt(e.target.value))}
+          >
+            {teamsArray.map((tm) => {
+              return (
+                <option key={tm} value={tm}>
+                  Team {tm}
+                </option>
+              );
+            })}
+          </select>
         </div>
       </div>
       <div className="h-5/6 overflow-x-auto">
-        <table className="w-full table-auto">
-          <thead className="border-b sticky top-0 bg-white">
+        <table className="w-full">
+          <thead className="border-b sticky top-0 bg-white dark:bg-slate-700">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -92,11 +109,11 @@ function PanelRosters({ data }) {
               </tr>
             ))}
           </thead>
-          <tbody className="overflow-y-auto">
+          <tbody>
             {table.getRowModel().rows.map((row, index) => (
               <tr
-                className={`border-b hover:bg-slate-200 ${
-                  index % 2 === 0 ? "bg-slate-100" : ""
+                className={`border-b hover:bg-slate-200 dark:hover:bg-slate-800 border-none ${
+                  index % 2 === 0 ? "bg-slate-100 dark:bg-slate-600" : ""
                 }`}
                 key={row.id}
               >
@@ -110,30 +127,8 @@ function PanelRosters({ data }) {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 }
 
 export default PanelRosters;
-
-function RostersDropdown() {
-  const { teams } = useDraftSettingsStore((state) => state.draftSettings);
-  const updateRoster = useDashboardSettingsStore((state) => state.updateRoster);
-
-  const teamsArray = arrayRange(1, teams, 1);
-
-  return (
-    <select
-      className="border rounded shadow"
-      onChange={(e) => updateRoster(parseInt(e.target.value))}
-    >
-      {teamsArray.map((tm) => {
-        return (
-          <option key={tm} value={tm}>
-            Team {tm}
-          </option>
-        );
-      })}
-    </select>
-  );
-}
