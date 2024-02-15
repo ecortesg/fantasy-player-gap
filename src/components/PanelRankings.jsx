@@ -150,7 +150,7 @@ function PanelRankings({ data }) {
             type="button"
             className={`rounded px-3 py-0.5 shadow text-base ${
               isFirstPick
-                ? "bg-slate-300 dark:bg-slate-800 text-slate-500"
+                ? "bg-slate-200 dark:bg-slate-800 text-slate-500"
                 : "cursor-pointer bg-red-500 text-white"
             }`}
             disabled={isFirstPick}

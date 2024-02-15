@@ -71,7 +71,7 @@ function SettingsForm({ handleSubmit }) {
                   id={field.id}
                   value={values[field.id]}
                   onChange={handleChange}
-                  className="w-40 rounded px-2 py-1 bg-slate-200 dark:bg-slate-800 border-none outline-none"
+                  className="w-40 rounded px-2 py-1 bg-slate-200 dark:bg-slate-700 border-none outline-none"
                 >
                   {field.options.map((option) => {
                     return (
@@ -161,7 +161,7 @@ function SettingsSection({
               step={field.step || "0.1"}
               value={values.scoring[field.id]}
               onChange={handleNestedChange}
-              className="w-20 rounded px-2 py-1 bg-slate-200 dark:bg-slate-800 border-none outline-none"
+              className="w-20 rounded px-2 py-1 bg-slate-200 dark:bg-slate-700 border-none outline-none"
             />
           </div>
         );
