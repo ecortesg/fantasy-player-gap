@@ -4,26 +4,31 @@ import DraftHeader from "./DraftHeader";
 import DraftBoard from "./DraftBoard";
 import DraftPanel from "./DraftPanel";
 import SettingsForm from "./SettingsForm";
-import SettingsModal from "./SettingsModal";
+import SetPlayerForm from "./SetPlayerForm";
+import Modal from "./Modal";
 import { useDraftSettingsStore } from "../store/draftSettingsStore";
 import { useDraftStore } from "../store/draftStore";
 import { useDashboardSettingsStore } from "../store/dashboardSettingsStore";
+import RemovePlayerForm from "./RemovePlayerForm";
 
 function Dashboard({ data }) {
-  const [counter, picks, assignPlayer, removePlayer, selectedPlayers] =
-    useDraftStore((state) => [
-      state.counter,
+  const [picks, assignPlayer, removePlayer, selectedPlayers] = useDraftStore(
+    (state) => [
       state.picks,
       state.assignPlayer,
       state.removePlayer,
       state.selectedPlayers,
-    ]);
+    ]
+  );
   const [adp, scoring, teams] = useDraftSettingsStore((state) => [
     state.adp,
     state.scoring,
     state.teams,
   ]);
-  const roster = useDashboardSettingsStore((state) => state.roster);
+  const [modal, roster] = useDashboardSettingsStore((state) => [
+    state.modal,
+    state.roster,
+  ]);
 
   const selectedAndProjectedPlayers = new Set(
     picks
@@ -53,27 +58,39 @@ function Dashboard({ data }) {
       return a.adp - b.adp || b.fpts - a.fpts;
     });
 
-  const currentPick = picks[counter];
+  const currentPick = picks.find(
+    (pick) => Object.keys(pick.player).length === 0 || pick.player.isProjection
+  );
   const nextPick = picks
-    .slice(counter + 2) // 2 because we want to ignore the pick at the turn
+    .slice(currentPick.overall + 1) // 1 because we want to ignore the pick at the turn
     .find((elem) => currentPick.team === elem.team);
   const picksBeforeYou = nextPick.overall - currentPick.overall;
-  const picksInBewteen = picks.slice(counter, counter + picksBeforeYou);
+  const picksInBewteen = picks.slice(
+    currentPick.overall - 1,
+    currentPick.overall - 1 + picksBeforeYou
+  );
 
   useEffect(() => {
-    picks.slice(counter).forEach((pick) => {
-      removePlayer(pick.overall - 1);
+    picks.slice(currentPick.overall - 1).forEach((pick) => {
+      if (pick.player.isProjection) {
+        removePlayer(pick.overall - 1);
+      }
     });
 
-    picksInBewteen.forEach((pick, index) => {
-      const projectedPlayer = freeAgents[index];
-      const { id, first_name, last_name, position } = projectedPlayer;
-      assignPlayer(
-        { id, first_name, last_name, position, isProjection: true },
-        pick.overall - 1
-      );
+    let index = 0;
+
+    picksInBewteen.forEach((pick) => {
+      if (Object.keys(pick.player).length === 0 || pick.player.isProjection) {
+        const projectedPlayer = freeAgents[index];
+        const { id, first_name, last_name, position } = projectedPlayer;
+        assignPlayer(
+          { id, first_name, last_name, position, isProjection: true },
+          pick.overall - 1
+        );
+        index++;
+      }
     });
-  }, [counter, adp, scoring, teams]);
+  }, [adp, scoring, teams, selectedPlayers]);
 
   const uniquePositions = [...new Set(data.map((elem) => elem.position))];
 
@@ -128,9 +145,25 @@ function Dashboard({ data }) {
 
   return (
     <>
-      <SettingsModal>
-        <SettingsForm />
-      </SettingsModal>
+      {modal === "settings" && (
+        <Modal
+          className={"w-full md:w-3/4 xl:w-1/2 h-full md:h-3/4 md:rounded-xl"}
+        >
+          <SettingsForm />
+        </Modal>
+      )}
+      {modal === "setPlayer" && (
+        <Modal
+          className={"w-full md:w-3/4 xl:w-1/2 h-full md:h-1/2 md:rounded-xl"}
+        >
+          <SetPlayerForm data={freeAgents} />
+        </Modal>
+      )}
+      {modal === "removePlayer" && (
+        <Modal className={"sm:w-96 w-full rounded-xl"}>
+          <RemovePlayerForm />
+        </Modal>
+      )}
       <main className="grid min-h-screen grid-rows-[56px_auto_50vh] bg-slate-50 dark:bg-slate-800">
         <DraftHeader />
         <DraftBoard />

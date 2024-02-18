@@ -1,3 +1,4 @@
+import { useDashboardSettingsStore } from "../store/dashboardSettingsStore";
 import { useDraftSettingsStore } from "../store/draftSettingsStore";
 import { useDraftStore } from "../store/draftStore";
 import { arrayRange } from "../utils";
@@ -20,7 +21,7 @@ function DraftBoard() {
       let scroll = window.scrollY;
       headerClone.style.transform = `translateY(${scroll}px)`;
       if (scroll > 4 * 14) {
-        //20 * 4 comes from the "-top-20" class in header clone
+        //14 * 4 comes from the "-top-14" class in header clone
         headerClone.style.opacity = 1;
       } else {
         headerClone.style.opacity = 0;
@@ -89,6 +90,23 @@ function DraftBoard() {
 export default DraftBoard;
 
 function BoardCard({ pick }) {
+  const [updateModal, updateIsModalOpen, updateManualPick] =
+    useDashboardSettingsStore((state) => [
+      state.updateModal,
+      state.updateIsModalOpen,
+      state.updateManualPick,
+    ]);
+
+  function handleClick() {
+    updateManualPick(pick);
+    if (Object.keys(pick.player).length === 0 || pick.player.isProjection) {
+      updateModal("setPlayer");
+    } else {
+      updateModal("removePlayer");
+    }
+    updateIsModalOpen(true);
+  }
+
   const colors = {
     QB: "bg-qb",
     RB: "bg-rb",
@@ -100,7 +118,7 @@ function BoardCard({ pick }) {
 
   return (
     <div
-      className={`font-semibold px-2 w-36 h-16 text-sm ${
+      className={`font-semibold px-2 w-36 h-16 text-sm cursor-pointer ${
         colors[pick.player.position] ||
         "bg-slate-300 dark:bg-slate-700 dark:text-white"
       } ${
@@ -108,6 +126,7 @@ function BoardCard({ pick }) {
           ? "text-slate-950 brightness-105 opacity-40"
           : "bg-opacity-80"
       } rounded-lg relative text-sm`}
+      onClick={handleClick}
     >
       <p className="absolute top-0 right-2">
         {pick.round}.{pick.number}

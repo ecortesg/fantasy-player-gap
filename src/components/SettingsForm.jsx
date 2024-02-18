@@ -46,7 +46,12 @@ function SettingsForm({ handleSubmit }) {
   }
 
   return (
-    <form className="h-full grid grid-rows-12" onSubmit={handleSubmit}>
+    <form
+      className="h-full grid grid-rows-12"
+      onSubmit={handleSubmit}
+      id="settings"
+      name="settings"
+    >
       <div className="row-span-1 flex w-full justify-between items-center p-4">
         <h2 className="text-xl font-bold">New Draft</h2>
         <IoMdClose
@@ -71,7 +76,7 @@ function SettingsForm({ handleSubmit }) {
                   id={field.id}
                   value={values[field.id]}
                   onChange={handleChange}
-                  className="w-40 rounded px-2 py-1 bg-slate-200 dark:bg-slate-700 border-none outline-none"
+                  className="w-40 rounded px-2 py-1 bg-slate-200 dark:bg-slate-800 border-none outline-none"
                 >
                   {field.options.map((option) => {
                     return (
@@ -161,7 +166,7 @@ function SettingsSection({
               step={field.step || "0.1"}
               value={values.scoring[field.id]}
               onChange={handleNestedChange}
-              className="w-20 rounded px-2 py-1 bg-slate-200 dark:bg-slate-700 border-none outline-none"
+              className="w-20 rounded px-2 py-1 bg-slate-200 dark:bg-slate-800 border-none outline-none"
             />
           </div>
         );

@@ -6,17 +6,16 @@ import { draftPicks } from "../utils";
 export const useDraftStore = create(
   persist(
     (set) => ({
-      counter: 0,
-      increaseCounter: () => set((state) => ({ counter: state.counter + 1 })),
-      decreaseCounter: () => set((state) => ({ counter: state.counter - 1 })),
       selectedPlayers: [],
       addSelectedPlayer: (playerId) =>
         set((state) => ({
           selectedPlayers: [...state.selectedPlayers, playerId],
         })),
-      removeSelectedPlayer: () =>
+      removeSelectedPlayer: (playerId) =>
         set((state) => ({
-          selectedPlayers: state.selectedPlayers.slice(0, -1),
+          selectedPlayers: state.selectedPlayers.filter(
+            (id) => id !== playerId
+          ),
         })),
       picks: draftPicks(useDraftSettingsStore.getState()),
       assignPlayer: (player, pick) =>
@@ -43,8 +42,8 @@ export const useDraftStore = create(
         })),
       newDraft: () =>
         set(() => ({
-          counter: 0,
           selectedPlayers: [],
+          picks: draftPicks(useDraftSettingsStore.getState()),
         })),
     }),
     {

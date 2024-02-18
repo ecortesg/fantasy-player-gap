@@ -14,9 +14,14 @@ function DraftHeader() {
     ]
   );
 
-  const updateIsModalOpen = useDashboardSettingsStore(
-    (state) => state.updateIsModalOpen
+  const [updateModal, updateIsModalOpen] = useDashboardSettingsStore(
+    (state) => [state.updateModal, state.updateIsModalOpen]
   );
+
+  function handleClick() {
+    updateModal("settings");
+    updateIsModalOpen(true);
+  }
 
   return (
     <section className="flex justify-between items-center px-4 bg-slate-50 dark:bg-slate-800 dark:text-white">
@@ -52,9 +57,9 @@ function DraftHeader() {
           />
         )}
         <MdSettings
-          className="cursor-pointer rounded-ful"
+          className="cursor-pointer rounded-full"
           size={32}
-          onClick={() => updateIsModalOpen(true)}
+          onClick={handleClick}
         />
       </div>
     </section>
