@@ -1,7 +1,7 @@
-import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
-import { useDraftSettingsStore } from "./draftSettingsStore";
-import { draftPicks } from "../utils";
+import { create } from "zustand"
+import { persist, createJSONStorage } from "zustand/middleware"
+import { useDraftSettingsStore } from "./draftSettingsStore"
+import { draftPicks } from "../utils"
 
 export const useDraftStore = create(
   persist(
@@ -29,7 +29,7 @@ export const useDraftStore = create(
               : p
           ),
         })),
-      removePlayer: (pick) =>
+      removePlayer: (pick) => {
         set((state) => ({
           picks: state.picks.map((p, index) =>
             index === pick
@@ -39,7 +39,8 @@ export const useDraftStore = create(
                 }
               : p
           ),
-        })),
+        }))
+      },
       newDraft: () =>
         set(() => ({
           selectedPlayers: [],
@@ -51,4 +52,4 @@ export const useDraftStore = create(
       storage: createJSONStorage(() => localStorage),
     }
   )
-);
+)
