@@ -1,20 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
 import {
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
   useReactTable,
   getFilteredRowModel,
-} from "@tanstack/react-table";
-import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
-import { VscClose } from "react-icons/vsc";
+} from "@tanstack/react-table"
+import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa"
+import { VscClose } from "react-icons/vsc"
 
 function TableWithFilters({ data, columns }) {
-  const [activePill, setActivePill] = useState("");
-  const positions = { QB: 1, RB: 1, WR: 1, TE: 1, K: 1, DEF: 1 };
+  const [activePill, setActivePill] = useState("")
+  const positions = { QB: 1, RB: 1, WR: 1, TE: 1, K: 1, DEF: 1 }
 
-  const [sorting, setSorting] = useState([]);
-  const [columnFilters, setColumnFilters] = useState([]);
+  const [sorting, setSorting] = useState([])
+  const [columnFilters, setColumnFilters] = useState([])
 
   const table = useReactTable({
     data,
@@ -25,29 +25,24 @@ function TableWithFilters({ data, columns }) {
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
-  });
+  })
 
-  const playerColumn = table.getColumn("player");
-  const positionColumn = table.getColumn("position");
+  const playerColumn = table.getColumn("player")
+  const positionColumn = table.getColumn("position")
 
   function handlePositionChange(value) {
-    positionColumn.setFilterValue(value);
-    setActivePill(value);
+    positionColumn.setFilterValue(value)
+    setActivePill(value)
   }
 
   function handlePlayerChange(value) {
-    playerColumn.setFilterValue(value);
+    playerColumn.setFilterValue(value)
   }
 
   return (
     <div className="h-full">
       <div className="h-1/6 flex flex-col gap-2">
-        <div>
-          <PlayerTextField
-            column={playerColumn}
-            onChange={handlePlayerChange}
-          />
-        </div>
+        <PlayerTextField column={playerColumn} onChange={handlePlayerChange} />
         <div className="flex flex-1 items-center gap-x-2 shrink-0 flex-wrap md:justify-start justify-center">
           <PositionPill
             key="ALL"
@@ -66,7 +61,7 @@ function TableWithFilters({ data, columns }) {
                   activePill={activePill}
                   handlePositionChange={handlePositionChange}
                 />
-              );
+              )
             }
           })}
         </div>
@@ -131,10 +126,10 @@ function TableWithFilters({ data, columns }) {
         </table>
       </div>
     </div>
-  );
+  )
 }
 
-export default TableWithFilters;
+export default TableWithFilters
 
 function PositionPill({ activePill, position, label, handlePositionChange }) {
   return (
@@ -148,27 +143,27 @@ function PositionPill({ activePill, position, label, handlePositionChange }) {
     >
       {label}
     </div>
-  );
+  )
 }
 
 function PlayerTextField({ column, onChange, debounce = 500 }) {
-  const columnFilterValue = column.getFilterValue() ?? "";
-  const [value, setValue] = useState(columnFilterValue);
+  const columnFilterValue = column.getFilterValue() ?? ""
+  const [value, setValue] = useState(columnFilterValue)
 
   useEffect(() => {
-    setValue(columnFilterValue);
-  }, [columnFilterValue]);
+    setValue(columnFilterValue)
+  }, [columnFilterValue])
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      onChange(value);
-    }, debounce);
+      onChange(value)
+    }, debounce)
 
-    return () => clearTimeout(timeout);
-  }, [value]);
+    return () => clearTimeout(timeout)
+  }, [value])
 
   return (
-    <div className="relative">
+    <div className="relative w-fit">
       <input
         className="border rounded pl-2 pr-8 py-0.5 bg-slate-200 dark:bg-slate-800 border-none outline-none"
         type="text"
@@ -183,5 +178,5 @@ function PlayerTextField({ column, onChange, debounce = 500 }) {
         />
       )}
     </div>
-  );
+  )
 }

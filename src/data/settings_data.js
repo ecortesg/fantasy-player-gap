@@ -7,7 +7,7 @@ export const ADP_TEXT = {
   dynasty_half_ppr: "Dynasty Half PPR",
   dynasty_ppr: "Dynasty PPR",
   dynasty_2qb: "Dynasty 2-QB",
-};
+}
 
 export const GENERAL = [
   {
@@ -40,19 +40,54 @@ export const GENERAL = [
       { id: "22", text: "22" },
     ],
   },
+]
+
+export const ROSTER = [
   {
-    id: "rounds",
-    label: "Rounds",
-    options: [
-      { id: "13", text: "13" },
-      { id: "14", text: "14" },
-      { id: "15", text: "15" },
-      { id: "16", text: "16" },
-      { id: "17", text: "17" },
-      { id: "18", text: "18" },
-    ],
+    id: "qb",
+    label: "QB",
   },
-];
+  {
+    id: "rb",
+    label: "RB",
+  },
+  {
+    id: "wr",
+    label: "WR",
+  },
+  {
+    id: "te",
+    label: "TE",
+  },
+  {
+    id: "flex-w-r-t",
+    label: "FLEX (WR/RB/TE)",
+  },
+  {
+    id: "flex-w-r",
+    label: "FLEX (WR/RB)",
+  },
+  {
+    id: "flex-w-t",
+    label: "FLEX (WR/TE)",
+  },
+  {
+    id: "flex-q-w-r-t",
+    label: "FLEX (QB/WR/RB/TE)",
+  },
+  {
+    id: "k",
+    label: "K",
+  },
+  {
+    id: "def",
+    label: "DEF",
+  },
+  {
+    id: "bench",
+    label: "BENCH",
+  },
+]
 
 export const PASSING = [
   {
@@ -84,7 +119,7 @@ export const PASSING = [
     id: "pass_att",
     label: "Pass Attempts",
   },
-];
+]
 
 export const RUSHING = [
   {
@@ -107,7 +142,7 @@ export const RUSHING = [
     id: "rush_att",
     label: "Rush Attempts",
   },
-];
+]
 
 export const RECEIVING = [
   {
@@ -166,7 +201,7 @@ export const RECEIVING = [
     id: "bonus_rec_te",
     label: "Reception Bonus-TE",
   },
-];
+]
 
 export const KICKING = [
   {
@@ -197,7 +232,7 @@ export const KICKING = [
     id: "xpmiss",
     label: "PAT Missed",
   },
-];
+]
 
 export const DEFENSE = [
   {
@@ -232,7 +267,7 @@ export const DEFENSE = [
     id: "blk_kick",
     label: "Blocked Kick",
   },
-];
+]
 
 export const MISC = [
   {
@@ -243,12 +278,24 @@ export const MISC = [
     id: "def_fum_td",
     label: "Fumble Recovery TD",
   },
-];
+]
 
 export const DEFAULT_SETTINGS = {
   adp: "half_ppr",
   teams: "12",
-  rounds: "15",
+  roster: {
+    qb: "1",
+    rb: "2",
+    wr: "2",
+    te: "1",
+    "flex-w-r-t": "0",
+    "flex-w-r": "1",
+    "flex-w-t": "0",
+    "flex-q-w-r-t": "0",
+    k: "1",
+    def: "1",
+    bench: "6",
+  },
   scoring: {
     pass_yd: "0.04",
     pass_td: "4",
@@ -294,7 +341,7 @@ export const DEFAULT_SETTINGS = {
     def_fum_td: "0",
     fum_lost: "-2",
   },
-};
+}
 
 const PROJECTED_STATS = [
   /* Passing */
@@ -367,4 +414,4 @@ const PROJECTED_STATS = [
   "adp_dynasty_2qb",
   "adp_dynasty",
   "adp_2qb",
-];
+]

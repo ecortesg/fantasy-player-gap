@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from "react"
 import {
   GENERAL,
   PASSING,
@@ -7,42 +7,50 @@ import {
   KICKING,
   DEFENSE,
   MISC,
-} from "../data/settings_data";
-import { IoMdClose } from "react-icons/io";
-import { useDraftSettingsStore } from "../store/draftSettingsStore";
-import { useDashboardSettingsStore } from "../store/dashboardSettingsStore";
-import { useDraftStore } from "../store/draftStore";
+  ROSTER,
+} from "../data/settings_data"
+import { IoMdClose } from "react-icons/io"
+import { useDraftSettingsStore } from "../store/draftSettingsStore"
+import { useDashboardSettingsStore } from "../store/dashboardSettingsStore"
+import { useDraftStore } from "../store/draftStore"
 
 function SettingsForm({ handleSubmit }) {
   const updateIsModalOpen = useDashboardSettingsStore(
     (state) => state.updateIsModalOpen
-  );
+  )
 
   const [settings, updateSettings] = useDraftSettingsStore((state) => [
     state,
     state.updateSettings,
-  ]);
+  ])
 
-  const newDraft = useDraftStore((state) => state.newDraft);
+  const newDraft = useDraftStore((state) => state.newDraft)
 
-  const [values, setValues] = useState(settings);
+  const [values, setValues] = useState(settings)
 
   function handleChange(e) {
-    setValues({ ...values, [e.target.id]: e.target.value });
+    setValues({ ...values, [e.target.id]: e.target.value })
   }
 
-  function handleNestedChange(e) {
+  function handleScoringChange(e) {
     setValues({
       ...values,
       scoring: { ...values.scoring, [e.target.id]: e.target.value },
-    });
+    })
+  }
+
+  function handleRosterChange(e) {
+    setValues({
+      ...values,
+      roster: { ...values.roster, [e.target.id]: e.target.value },
+    })
   }
 
   function handleSubmit(e) {
-    e.preventDefault();
-    updateSettings(values);
-    updateIsModalOpen(false);
-    newDraft();
+    e.preventDefault()
+    updateSettings(values)
+    updateIsModalOpen(false)
+    newDraft()
   }
 
   return (
@@ -60,10 +68,10 @@ function SettingsForm({ handleSubmit }) {
           onClick={() => updateIsModalOpen(false)}
         />
       </div>
-      <div className="row-span-10 overflow-y-auto p-6">
-        <div className="mb-12">
+      <div className="row-span-10 overflow-y-auto p-6 space-y-12">
+        <div>
           <h3 className="font-semibold text-lg">General</h3>
-          <hr className="my-6" />
+          <hr className="my-4" />
           {GENERAL.map((field) => {
             return (
               <div
@@ -83,50 +91,74 @@ function SettingsForm({ handleSubmit }) {
                       <option key={option.id} value={option.id}>
                         {option.text}
                       </option>
-                    );
+                    )
                   })}
                 </select>
               </div>
-            );
+            )
           })}
         </div>
-        <SettingsSection
-          fields={PASSING}
-          title="Scoring"
-          subtitle="PASSING"
-          values={values}
-          handleNestedChange={handleNestedChange}
-        />
-        <SettingsSection
-          fields={RUSHING}
-          subtitle="RUSHING"
-          values={values}
-          handleNestedChange={handleNestedChange}
-        />
-        <SettingsSection
-          fields={RECEIVING}
-          subtitle="RECEIVING"
-          values={values}
-          handleNestedChange={handleNestedChange}
-        />
-        <SettingsSection
-          fields={KICKING}
-          subtitle="KICKING"
-          values={values}
-          handleNestedChange={handleNestedChange}
-        />
-        <SettingsSection
-          fields={DEFENSE}
-          subtitle="DEFENSE"
-          values={values}
-          handleNestedChange={handleNestedChange}
-        />
-        <SettingsSection
-          fields={MISC}
-          subtitle="MISC"
-          values={values}
-          handleNestedChange={handleNestedChange}
-        />
+        <div>
+          <h3 className="font-semibold text-lg">Roster</h3>
+          <hr className="my-4" />
+          {ROSTER.map((field) => {
+            return (
+              <div
+                key={field.id}
+                className="flex w-full mb-4 justify-between items-center gap-2"
+              >
+                <label htmlFor={field.id}>{field.label}</label>
+                <input
+                  id={field.id}
+                  type="number"
+                  step="1"
+                  value={values.roster[field.id]}
+                  onChange={handleRosterChange}
+                  className="w-20 rounded px-2 py-1 bg-slate-200 dark:bg-slate-800 border-none outline-none"
+                />
+              </div>
+            )
+          })}
+        </div>
+        <div>
+          <SettingsSection
+            fields={PASSING}
+            title="Scoring"
+            subtitle="PASSING"
+            values={values}
+            handleScoringChange={handleScoringChange}
+          />
+          <SettingsSection
+            fields={RUSHING}
+            subtitle="RUSHING"
+            values={values}
+            handleScoringChange={handleScoringChange}
+          />
+          <SettingsSection
+            fields={RECEIVING}
+            subtitle="RECEIVING"
+            values={values}
+            handleScoringChange={handleScoringChange}
+          />
+          <SettingsSection
+            fields={KICKING}
+            subtitle="KICKING"
+            values={values}
+            handleScoringChange={handleScoringChange}
+          />
+          <SettingsSection
+            fields={DEFENSE}
+            subtitle="DEFENSE"
+            values={values}
+            handleScoringChange={handleScoringChange}
+          />
+          <SettingsSection
+            fields={MISC}
+            subtitle="MISC"
+            values={values}
+            handleScoringChange={handleScoringChange}
+          />
+        </div>
       </div>
       <div className="row-span-1 flex w-full justify-end items-center p-4">
         <input
@@ -136,22 +168,22 @@ function SettingsForm({ handleSubmit }) {
         ></input>
       </div>
     </form>
-  );
+  )
 }
 
-export default SettingsForm;
+export default SettingsForm
 
 function SettingsSection({
   fields,
   title = null,
   subtitle = null,
   values,
-  handleNestedChange,
+  handleScoringChange,
 }) {
   return (
     <div>
       {title && <h3 className="font-semibold text-lg">{title}</h3>}
-      <hr className="my-6" />
+      <hr className="my-4" />
       {subtitle && <h4 className="font-bold mb-4 text-sm">{subtitle}</h4>}
       {fields.map((field) => {
         return (
@@ -165,12 +197,12 @@ function SettingsSection({
               type="number"
               step={field.step || "0.1"}
               value={values.scoring[field.id]}
-              onChange={handleNestedChange}
+              onChange={handleScoringChange}
               className="w-20 rounded px-2 py-1 bg-slate-200 dark:bg-slate-800 border-none outline-none"
             />
           </div>
-        );
+        )
       })}
     </div>
-  );
+  )
 }

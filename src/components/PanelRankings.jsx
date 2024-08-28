@@ -1,32 +1,32 @@
-import { createColumnHelper } from "@tanstack/react-table";
-import { useDraftStore } from "../store/draftStore";
-import { useDraftSettingsStore } from "../store/draftSettingsStore";
-import { IoMdAdd } from "react-icons/io";
-import TableWithFilters from "./TableWithFilters";
+import { createColumnHelper } from "@tanstack/react-table"
+import { useDraftStore } from "../store/draftStore"
+import { useDraftSettingsStore } from "../store/draftSettingsStore"
+import { IoMdAdd } from "react-icons/io"
+import TableWithFilters from "./TableWithFilters"
 
 function PanelRankings({ data, currentPick }) {
   const [assignPlayer, addSelectedPlayer] = useDraftStore((state) => [
     state.assignPlayer,
     state.addSelectedPlayer,
-  ]);
+  ])
 
   const [teams, rounds] = useDraftSettingsStore((state) => [
     state.teams,
     state.rounds,
-  ]);
+  ])
 
-  const isLastPick = currentPick.overall > teams * rounds;
+  const isLastPick = currentPick.overall > teams * rounds
 
   function selectPlayer(playerProps) {
-    const { id, first_name, last_name, position } = playerProps;
+    const { id, first_name, last_name, position } = playerProps
     assignPlayer(
       { id, first_name, last_name, position, isProjection: false },
-      currentPick.overall - 1
-    );
-    addSelectedPlayer(id);
+      currentPick
+    )
+    addSelectedPlayer(id)
   }
 
-  const columnHelper = createColumnHelper();
+  const columnHelper = createColumnHelper()
   const columns = [
     columnHelper.display({
       id: "select",
@@ -77,9 +77,9 @@ function PanelRankings({ data, currentPick }) {
       sortingFn: (a, b) => a.original.urgency.value - b.original.urgency.value,
       size: 100,
     }),
-  ];
+  ]
 
-  return <TableWithFilters columns={columns} data={data} />;
+  return <TableWithFilters columns={columns} data={data} />
 }
 
-export default PanelRankings;
+export default PanelRankings

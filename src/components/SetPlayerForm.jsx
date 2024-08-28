@@ -1,33 +1,33 @@
-import { IoMdClose, IoMdAdd } from "react-icons/io";
-import { createColumnHelper } from "@tanstack/react-table";
-import { useDashboardSettingsStore } from "../store/dashboardSettingsStore";
-import TableWithFilters from "./TableWithFilters";
-import { useDraftStore } from "../store/draftStore";
+import { IoMdClose, IoMdAdd } from "react-icons/io"
+import { createColumnHelper } from "@tanstack/react-table"
+import { useDashboardSettingsStore } from "../store/dashboardSettingsStore"
+import TableWithFilters from "./TableWithFilters"
+import { useDraftStore } from "../store/draftStore"
 
 export function SetPlayerForm({ data }) {
   const [updateIsModalOpen, manualPick] = useDashboardSettingsStore((state) => [
     state.updateIsModalOpen,
     state.manualPick,
-  ]);
+  ])
 
   const [assignPlayer, addSelectedPlayer] = useDraftStore((state) => [
     state.assignPlayer,
     state.addSelectedPlayer,
-  ]);
+  ])
 
-  const { number, overall, round, team } = manualPick;
+  const { number, overall, round, team } = manualPick
 
   function selectPlayer(playerProps) {
-    const { id, first_name, last_name, position } = playerProps;
+    const { id, first_name, last_name, position } = playerProps
     assignPlayer(
       { id, first_name, last_name, position, isProjection: false },
-      overall - 1
-    );
-    addSelectedPlayer(id);
-    updateIsModalOpen(false);
+      manualPick
+    )
+    addSelectedPlayer(id)
+    updateIsModalOpen(false)
   }
 
-  const columnHelper = createColumnHelper();
+  const columnHelper = createColumnHelper()
   const columns = [
     columnHelper.display({
       id: "select",
@@ -60,7 +60,7 @@ export function SetPlayerForm({ data }) {
       header: "FPts",
       size: 100,
     }),
-  ];
+  ]
 
   return (
     <div className="h-full flex flex-col">
@@ -81,7 +81,7 @@ export function SetPlayerForm({ data }) {
         <TableWithFilters columns={columns} data={data} />
       </div>
     </div>
-  );
+  )
 }
 
-export default SetPlayerForm;
+export default SetPlayerForm
