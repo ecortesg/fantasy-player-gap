@@ -1,17 +1,18 @@
-import { useMemo } from "react";
-import { createColumnHelper } from "@tanstack/react-table";
-import { useDashboardSettingsStore } from "../store/dashboardSettingsStore";
-import { useDraftSettingsStore } from "../store/draftSettingsStore";
-import { arrayRange } from "../utils";
-import Table from "./Table";
+import { useMemo, useState } from "react"
+import { createColumnHelper } from "@tanstack/react-table"
+import { useDraftSettingsStore } from "../store/draftSettingsStore"
+import { useDraftStore } from "../store/draftStore"
+import { arrayRange } from "../utils"
+import Table from "./Table"
 
-function PanelRosters({ data }) {
-  const teams = useDraftSettingsStore((state) => state.teams);
-  const updateRoster = useDashboardSettingsStore((state) => state.updateRoster);
+function PanelRosters() {
+  const teams = useDraftSettingsStore((state) => state.teams)
+  const rosters = useDraftStore((state) => state.rosters)
+  const [roster, setRoster] = useState(1)
 
-  const teamsArray = arrayRange(1, teams, 1);
+  const teamsArray = arrayRange(1, teams, 1)
 
-  const columnHelper = createColumnHelper();
+  const columnHelper = createColumnHelper()
   const columns = useMemo(
     () => [
       columnHelper.accessor(
@@ -31,7 +32,9 @@ function PanelRosters({ data }) {
       }),
     ],
     []
-  );
+  )
+
+  const data = rosters[roster].filter((elem) => !elem.player.isProjection)
 
   return (
     <div className="h-full">
@@ -42,14 +45,14 @@ function PanelRosters({ data }) {
         <div className="flex flex-1 items-center justify-center ">
           <select
             className="rounded bg-slate-200 dark:bg-slate-800 border-none outline-none px-2 py-1"
-            onChange={(e) => updateRoster(parseInt(e.target.value))}
+            onChange={(e) => setRoster(parseInt(e.target.value))}
           >
             {teamsArray.map((tm) => {
               return (
                 <option key={tm} value={tm}>
                   Team {tm}
                 </option>
-              );
+              )
             })}
           </select>
         </div>
@@ -58,7 +61,7 @@ function PanelRosters({ data }) {
         <Table columns={columns} data={data} />
       </div>
     </div>
-  );
+  )
 }
 
-export default PanelRosters;
+export default PanelRosters

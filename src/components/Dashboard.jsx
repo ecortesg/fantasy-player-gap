@@ -12,23 +12,20 @@ import { useDashboardSettingsStore } from "../store/dashboardSettingsStore"
 import RemovePlayerForm from "./RemovePlayerForm"
 
 function Dashboard({ data }) {
-  const [picks, assignPlayer, removePlayer, selectedPlayers] = useDraftStore(
-    (state) => [
+  const [picks, rosters, assignPlayer, removePlayer, selectedPlayers] =
+    useDraftStore((state) => [
       state.picks,
+      state.rosters,
       state.assignPlayer,
       state.removePlayer,
       state.selectedPlayers,
-    ]
-  )
+    ])
   const [adp, scoring, teams] = useDraftSettingsStore((state) => [
     state.adp,
     state.scoring,
     state.teams,
   ])
-  const [modal, roster] = useDashboardSettingsStore((state) => [
-    state.modal,
-    state.roster,
-  ])
+  const modal = useDashboardSettingsStore((state) => state.modal)
 
   const selectedAndProjectedPlayers = new Set(
     picks
@@ -71,41 +68,38 @@ function Dashboard({ data }) {
   )
 
   useEffect(() => {
-    picks.slice(currentPick.overall - 1).forEach((pick) => {
-      if (pick.player.isProjection) {
-        removePlayer(pick.overall - 1)
-      }
-    })
-
-    // console.log(picks)
+    picks
+      // .slice(currentPick.overall - 1, currentPick.overall - 1 + 3 * teams)
+      .forEach((pick) => {
+        if (pick.player.isProjection) {
+          removePlayer(pick)
+        }
+      })
 
     let index = 0
 
     picksInBewteen.forEach((pick) => {
-      const roster = picks.filter(
-        (elem) =>
-          elem.team === pick.team &&
-          // !elem.player.isProjection &&
-          Object.keys(elem.player).length > 0
-      )
+      // TODO: Make projected picks based on roster and position of need
+      // Has to be done in state since the state is updated async and the following approach doesn't work... The roster/countByPostition is not what it's supposed to be
+      // const roster = rosters[pick.team]
 
-      const countByPosition = {}
-      roster.forEach((elem) => {
-        if (countByPosition[elem.player.position]) {
-          countByPosition[elem.player.position] += 1
-        } else {
-          countByPosition[elem.player.position] = 1
-        }
-      })
+      // const countByPosition = {}
+      // roster.forEach((elem) => {
+      //   if (countByPosition[elem.player.position]) {
+      //     countByPosition[elem.player.position] += 1
+      //   } else {
+      //     countByPosition[elem.player.position] = 1
+      //   }
+      // })
 
-      console.log(countByPosition)
+      // console.log(pick.team, countByPosition)
 
       if (Object.keys(pick.player).length === 0 || pick.player.isProjection) {
         const projectedPlayer = freeAgents[index]
         const { id, first_name, last_name, position } = projectedPlayer
         assignPlayer(
           { id, first_name, last_name, position, isProjection: true },
-          pick.overall - 1
+          pick
         )
         index++
       }
@@ -127,13 +121,6 @@ function Dashboard({ data }) {
     }
     replacements.push(replacement)
   }
-
-  const currentRoster = picks.filter(
-    (elem) =>
-      elem.team === roster &&
-      !elem.player.isProjection &&
-      Object.keys(elem.player).length > 0
-  )
 
   const freeAgentsRanked = freeAgents
     .map((elem) => {
@@ -193,7 +180,6 @@ function Dashboard({ data }) {
           nextPick={nextPick}
           picksBeforeYou={picksBeforeYou}
           replacements={replacements}
-          currentRoster={currentRoster}
         />
       </main>
     </>

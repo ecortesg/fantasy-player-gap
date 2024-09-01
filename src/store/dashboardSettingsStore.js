@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from "zustand"
 
 export const useDashboardSettingsStore = create((set) => ({
   modal: "",
@@ -11,14 +11,9 @@ export const useDashboardSettingsStore = create((set) => ({
     set(() => ({
       isModalOpen: newState,
     })),
-  roster: 1,
-  updateRoster: (newState) =>
-    set(() => ({
-      roster: newState,
-    })),
   manualPick: {},
   updateManualPick: (newPick) =>
     set(() => ({
       manualPick: { ...newPick },
     })),
-}));
+}))

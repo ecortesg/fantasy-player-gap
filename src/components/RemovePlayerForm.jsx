@@ -1,28 +1,28 @@
-import { IoMdClose } from "react-icons/io";
-import { useDashboardSettingsStore } from "../store/dashboardSettingsStore";
-import { useDraftStore } from "../store/draftStore";
+import { IoMdClose } from "react-icons/io"
+import { useDashboardSettingsStore } from "../store/dashboardSettingsStore"
+import { useDraftStore } from "../store/draftStore"
 
 export function RemovePlayerForm() {
   const [updateIsModalOpen, manualPick] = useDashboardSettingsStore((state) => [
     state.updateIsModalOpen,
     state.manualPick,
-  ]);
+  ])
 
   const [removePlayer, removeSelectedPlayer] = useDraftStore((state) => [
     state.removePlayer,
     state.removeSelectedPlayer,
-  ]);
+  ])
 
-  const { number, overall, round, team, player } = manualPick;
+  const { number, overall, round, team, player } = manualPick
 
   function remove() {
-    removePlayer(overall - 1);
-    removeSelectedPlayer(player.id);
-    updateIsModalOpen(false);
+    removePlayer(manualPick)
+    removeSelectedPlayer(player.id)
+    updateIsModalOpen(false)
   }
 
   function cancel() {
-    updateIsModalOpen(false);
+    updateIsModalOpen(false)
   }
 
   return (
@@ -59,7 +59,7 @@ export function RemovePlayerForm() {
         </button>
       </div>
     </div>
-  );
+  )
 }
 
-export default RemovePlayerForm;
+export default RemovePlayerForm

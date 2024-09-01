@@ -39,13 +39,21 @@ export const useDraftStore = create(
       removePlayer: (pick) => {
         set((state) => ({
           picks: state.picks.map((p, index) =>
-            index === pick
+            index === pick.overall - 1
               ? {
                   ...p,
                   player: {},
                 }
               : p
           ),
+          rosters: {
+            ...state.rosters,
+            [pick.team]: [
+              ...state.rosters[pick.team].filter(
+                (elem) => elem.overall !== pick.overall
+              ),
+            ],
+          },
         }))
       },
       newDraft: () =>
@@ -63,10 +71,14 @@ export const useDraftStore = create(
       version: 1,
       migrate: (persistedState, version) => {
         if (version < 1) {
-          const { newDraft } = useDraftStore.getState()
-          newDraft()
+          const draftSettings = useDraftSettingsStore.getState()
+          return {
+            ...persistedState,
+            picks: draftPicks(draftSettings),
+            rosters: createRostersObject(Number(draftSettings.teams)),
+            selectedPlayers: [],
+          }
         }
-
         return persistedState
       },
     }
