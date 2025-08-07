@@ -6,7 +6,7 @@ import { useEffect, useLayoutEffect } from "react"
 import { useDraftSettingsStore } from "./store/draftSettingsStore"
 
 function App() {
-  const season = "2024"
+  const season = "2025"
   const projectionsQuery = useQuery({
     queryKey: ["projections", season],
     queryFn: () => getProjections(season),
